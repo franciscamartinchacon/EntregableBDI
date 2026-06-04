@@ -25,7 +25,9 @@ INSERT INTO estudiantes (documento, nombre, apellido, correo, id_carrera) VALUES
 ('55555566', 'Sofía', 'Martínez', 'sofia.martinez@ucu.edu.uy', 4),
 ('55566677', 'Valentina', 'Silva', 'valentina.silva@ucu.edu.uy', 5),
 ('55577788', 'Tomás', 'López', 'tomas.lopez@ucu.edu.uy', 6),
-('55588899', 'Martina', 'Sosa', 'martina.sosa@ucu.edu.uy', 1);
+('55588899', 'Martina', 'Sosa', 'martina.sosa@ucu.edu.uy', 1),
+('55599900', 'Facundo', 'Ramírez', 'facundo.ramirez@ucu.edu.uy', 2),
+('55600011', 'Camila', 'Méndez', 'camila.mendez@ucu.edu.uy', 3);
 
 -- Disciplinas deportivas
 INSERT INTO disciplinas (nombre) VALUES
@@ -55,7 +57,8 @@ VALUES
 ('Yoga inicial', 5, 2, 2, 'miercoles', '2026-06-12', '19:00:00', 'abierta'),
 ('Atletismo inicial', 3, 5, 4, 'jueves', '2026-06-13', '17:30:00', 'cerrada'),
 ('Básquetbol recreativo', 2, 1, 5, 'viernes', '2026-06-14', '18:30:00', 'abierta'),
-('Vóleibol mixto', 4, 4, 4, 'sabado', '2026-06-15', '10:00:00', 'cancelada');
+('Vóleibol mixto', 4, 4, 4, 'sabado', '2026-06-15', '10:00:00', 'cancelada'),
+('Gimnasio libre', 7, 1, 6, 'lunes', '2026-06-16', '09:00:00', 'abierta');
 
 -- Inscripciones
 INSERT INTO inscripciones
@@ -74,7 +77,15 @@ VALUES
 
 (1, 5, 'confirmada'),
 (3, 5, 'confirmada'),
-(5, 5, 'confirmada');
+(5, 5, 'confirmada'),
+
+(7, 2, 'lista_espera'),
+(10, 3, 'lista_espera'),
+
+(2, 7, 'confirmada'),
+(4, 7, 'confirmada'),
+(6, 7, 'confirmada'),
+(9,7,'confirmada');
 
 -- Asistencias
 INSERT INTO asistencias
@@ -92,4 +103,15 @@ VALUES
 
 (9, '2026-06-14', TRUE),
 (10, '2026-06-14', TRUE),
-(11, '2026-06-14', FALSE);
+(11, '2026-06-14', FALSE),
+
+(15, '2026-06-16', FALSE),
+(16, '2026-06-16', TRUE),
+(17, '2026-06-16', TRUE),
+
+(2, '2026-06-17', FALSE),
+(2, '2026-06-18', FALSE),
+(5, '2026-06-18', FALSE),
+(5, '2026-06-19', FALSE),
+(13, '2026-06-20', FALSE),
+(13, '2026-06-21', FALSE);
