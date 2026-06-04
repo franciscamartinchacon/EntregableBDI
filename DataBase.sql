@@ -28,9 +28,10 @@ CREATE TABLE estudiantes
     nombre      VARCHAR(50) NOT NULL,
     apellido    VARCHAR(50) NOT NULL,
     correo      VARCHAR(50) NOT NULL UNIQUE, #unico por cada estudiante
-    carrera     VARCHAR(50) NOT NULL,
-    facultad    VARCHAR(50) NOT NULL,
-    PRIMARY KEY (id_estudiante)
+    id_carrera    INT NOT NULL,
+
+    PRIMARY KEY (id_estudiante),
+    FOREIGN KEY (id_carrera) REFERENCES carreras(id_carrera)
 );
 
 CREATE TABLE disciplinas
@@ -95,3 +96,4 @@ CREATE TABLE asistencias
     FOREIGN KEY (id_inscripcion) REFERENCES inscripciones(id_inscripcion),
     UNIQUE (id_inscripcion, fecha)
 );
+
