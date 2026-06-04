@@ -16,14 +16,14 @@ CREATE TABLE estudiantes
 
 CREATE TABLE disiplinas
 (
-    idDisiplina    INT AUTO_INCREMENT,
+    id_disiplina    INT AUTO_INCREMENT,
     nombre         VARCHAR(50) NOT NULL,
-    PRIMARY KEY (idDisiplina)
+    PRIMARY KEY (id_disiplina)
 );
 
 CREATE TABLE actividadesDeportivas
 (
-    idActividad     INT AUTO_INCREMENT,
+    id_actividad     INT AUTO_INCREMENT,
     nombre          VARCHAR(50) NOT NULL,
     id_disiplina    INT NOT NULL,
     id_espacio      VARCHAR(50) NOT NULL,
@@ -33,9 +33,8 @@ CREATE TABLE actividadesDeportivas
     horario         TIME NOT NULL,
     estado          ENUM('abierta', 'cerrada', 'finalizada', 'cancelada'), #unicos valores aceptados
 
-    PRIMARY KEY (idActividad),
-    PRIMARY KEY (nombre),
-    FOREIGN KEY (id_disiplina) REFERENCES disiplinas(idDisiplina),
+    PRIMARY KEY (id_actividad),
+    FOREIGN KEY (id_disiplina) REFERENCES disiplinas(id_disiplina),
     FOREIGN KEY (id_espacio) REFERENCES espaciosDeportivos(id_espacio)
 );
 
