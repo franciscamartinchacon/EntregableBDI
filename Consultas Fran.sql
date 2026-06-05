@@ -29,3 +29,14 @@ GROUP BY e.id_estudiante, e.documento, e.nombre, e.apellido
 HAVING cantidad_inasistencias >= 3
 ORDER BY cantidad_inasistencias DESC;
 
+-- 8. Estudiantes en lista de espera por actividad
+SELECT a.nombre AS actividad, e.nombre, e.apellido, e.documento, i.fecha_inscripcion
+FROM inscripciones i
+JOIN estudiantes e ON i.id_estudiante = e.id_estudiante
+JOIN actividadesDeportivas a ON i.id_actividad_deportiva = a.id_actividad
+WHERE i.estado = 'lista_espera'
+ORDER BY a.nombre, i.fecha_inscripcion;
+
+-- 9. Actividades con más porcentaje que el promedio
+SELECT a.nombre
+FROM actividadesDeportivas a
