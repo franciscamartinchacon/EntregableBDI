@@ -10,9 +10,14 @@ GROUP BY a.id_actividad, a.nombre, a.cupo_max
 ORDER BY ROUND(((confirmados / a.cupo_max) * 100),2) DESC;    -- Para que muestre solo dos decimales
 
 -- 6. Porcentaje de asistencia por actividad
-
-
-
+SELECT a.nombre, ((COUNT(i.id_inscripcion)/COUNT(asis.presente))*100) as porcentaje
+FROM actividadesDeportivas a
+JOIN inscripciones i ON i.id_actividad_deportiva = a.id_actividad
+JOIN asistencias asis ON i.id_inscripcion = asis.id_inscripcion
+    AND asis.presente = TRUE
+    AND i.estado = 'confirmada'
+GROUP BY a.nombre
+ORDER BY porcentaje DESC;
 
 -- 7. Estudiantes con tres o más inasistencias registradas
 SELECT e.id_estudiante, e.documento, e.nombre, e.apellido, COUNT(asis.id_asistencia) AS cantidad_inasistencias
