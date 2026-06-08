@@ -10,7 +10,7 @@ ORDER BY cant_inscripciones DESC
 Limit 1;
 
 -- 2. Actividades con cupos disponibles.
-SELECT a.id_actividad, a.nombre, (SELECT COUNT(*) FROM inscripciones i WHERE i.id_actividad_deportiva = a.id_actividad AND i.estado = 'confirmada') -- subconslta
+SELECT a.id_actividad, a.nombre, (SELECT COUNT(*) FROM inscripciones i WHERE i.id_actividad_deportiva = a.id_actividad AND i.estado = 'confirmada') as cant_inscripciones  -- subconslta
 FROM actividadesDeportivas a
 WHERE a.cupo_max > (SELECT COUNT(*) FROM inscripciones i WHERE i.id_actividad_deportiva = a.id_actividad AND i.estado = 'confirmada');
 
