@@ -38,7 +38,7 @@ def ABM_estudiantes():
     while True:
         print()
 
-def ABM_disciplinas():
+#def ABM_disciplinas():
 
 def ABM_espacios_deportivos():
 
