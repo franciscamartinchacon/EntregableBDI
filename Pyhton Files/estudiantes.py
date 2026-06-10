@@ -1,6 +1,7 @@
 from conexionSQL import get_connection
 from validacion_datos import pedir_texto_obligatorio
 from validacion_datos import pedir_entero
+from main import menu
 
 # MENÚ DE ESTUDIANTES
 
@@ -24,6 +25,8 @@ def menu_estudiantes():
         elif opcion == "4":
             eliminar_estudiante()
         elif opcion == "0":
+            print("Saliendo...")
+            menu()
             break
         else:
             print("Opción inválida. Intente nuevamente.")
@@ -75,8 +78,6 @@ def listar_carreras():
             conexion.close()
 
 
-# ALTA DE ESTUDIANTE
-
 def alta_estudiante():
 
     print("\n--- Alta de estudiante ---")
@@ -120,8 +121,6 @@ def alta_estudiante():
         if conexion is not None:
             conexion.close()
 
-
-# LISTAR ESTUDIANTES
 
 def listar_estudiantes():
 
@@ -178,17 +177,8 @@ def listar_estudiantes():
             conexion.close()
 
 
-# ============================================================
-# MODIFICAR ESTUDIANTE
-# ============================================================
-
 def modificar_estudiante():
-    """
-    Modifica los datos de un estudiante existente.
 
-    Primero muestra la lista de estudiantes para que el usuario pueda ver el ID.
-    Luego pide los nuevos datos y ejecuta un UPDATE.
-    """
     print("\n--- Modificar estudiante ---")
 
     listar_estudiantes()
@@ -250,27 +240,17 @@ def modificar_estudiante():
             conexion.close()
 
 
-# ============================================================
-# ELIMINAR ESTUDIANTE
-# ============================================================
-
 def eliminar_estudiante():
-    """
-    Elimina un estudiante de la base de datos.
 
-    Importante:
-    Si el estudiante tiene inscripciones asociadas, MySQL puede impedir
-    la eliminación por la clave foránea. En ese caso, se muestra un mensaje.
-    """
     print("\n--- Eliminar estudiante ---")
 
     listar_estudiantes()
 
     id_estudiante = pedir_entero("\nIngrese el ID del estudiante a eliminar: ")
 
-    confirmacion = input("¿Seguro que desea eliminar este estudiante? (s/n): ").lower()
+    confirmacion = input("¿Seguro que desea eliminar este estudiante? (si/no): ").lower()
 
-    if confirmacion != "s":
+    if confirmacion != "si":
         print("Operación cancelada.")
         return
 
@@ -283,7 +263,7 @@ def eliminar_estudiante():
 
         sql = """
             DELETE FROM estudiantes
-            WHERE id_estudiante = %s;
+            WHERE id_estudiante = %si;
         """
 
         cursor.execute(sql, (id_estudiante,))

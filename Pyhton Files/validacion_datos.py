@@ -21,4 +21,27 @@ def pedir_entero(mensaje):
 
         print("Error: debe ingresar un número válido.")
 
+
+def pedir_entero_positivo(mensaje):
+    # Pide un número entero mayor que cero.
+    while True:
+        numero = pedir_entero(mensaje)
+
+        if numero > 0:
+            return numero
+
+        print("Error: el número debe ser mayor que cero.")
+
+
+def pedir_opcion_valida(mensaje, opciones_validas):
+    # Pide un texto y valida que esté dentro de una lista de opciones permitidas.
+    while True:
+        valor = input(mensaje).strip().lower()
+
+        if valor in opciones_validas:
+            return valor
+
+        print("Error: opción inválida.")
+        print("Opciones válidas:", ", ".join(opciones_validas))
+
 #normalizar datos???
