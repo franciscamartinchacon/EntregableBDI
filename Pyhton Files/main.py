@@ -23,7 +23,7 @@ def menu():
         elif opcion == "4":
             ABM_actividades_deportivas()
         elif opcion == "5":
-            gestión_inscripciones()
+            gestion_inscripciones()
         elif opcion == "6":
             registrar_asistencia()
         elif opcion == "7":
