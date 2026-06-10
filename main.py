@@ -33,21 +33,3 @@ def menu():
             break
         else:
             print("Opción no válida")
-
-def ABM_estudiantes():
-    while True:
-        print()
-
-#def ABM_disciplinas():
-
-def ABM_espacios_deportivos():
-
-def ABM_actividades_deportivas():
-
-def gestión_inscripciones():
-
-def registrar_asistencia():
-
-def  reportes():
-
-menu()
