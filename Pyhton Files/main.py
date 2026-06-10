@@ -23,7 +23,7 @@ def menu():
         elif opcion == "4":
             ABM_actividades_deportivas()
         elif opcion == "5":
-            gestión_inscripciones()
+            gestion_inscripciones()
         elif opcion == "6":
             registrar_asistencia()
         elif opcion == "7":
@@ -49,7 +49,7 @@ def ABM_espacios_deportivos():
 def ABM_actividades_deportivas():
     while True:
         print()
-def gestión_inscripciones():
+def gestion_inscripciones():
     while True:
         print()
 def registrar_asistencia():
