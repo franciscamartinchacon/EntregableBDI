@@ -20,8 +20,8 @@ def inscribir_estudiante():
     try:
         conexion = get_connection()
         cursor = conexion.cursor()
-        estado = "" #tengo que verifcar que la act. este abierta y que tenga cupos disponibles.
-        #consulta sql:
+        # para fijar el estado tengo que verifcar que la act. este abierta y que tenga cupos disponibles.
+        #consulta sql: revisa cant de inscptos acutalmente con el id de la act.
         sql_verificar = """
                 SELECT estado, cupoMax,
                        (SELECT COUNT(*) FROM inscripciones 
@@ -29,6 +29,7 @@ def inscribir_estudiante():
                 FROM actividadesDeportivas
                 WHERE id_actividad = %s
             """
+
         cursor.execute(sql_verificar, (id_actividad_deportiva, id_actividad_deportiva))
         actividad = cursor.fetchone()
 
@@ -36,11 +37,11 @@ def inscribir_estudiante():
             print("La actividad no existe.")
             return
 
-        if actividad[0] != 'abierta':
-            print("La actividad no está abierta.")
+        if actividad[0] != 'abierta': #actividad [0] = estado (orden del select)
+            print("La actividad no está abierta, por ende no se puede realizar la inscripción. ")
             return
 
-        estado = 'confirmada' if actividad[2] < actividad[1] else 'lista_espera'
+        estado = 'confirmada' if actividad[2] < actividad[1] else 'lista_espera' #actividad[2] = inscriptos, y [1] cupo max
 
 
         sql = """
