@@ -34,20 +34,28 @@ def menu():
         else:
             print("Opción no válida")
 
+
+#SOLO PARA QUE NO DE ERROR, NO SE USAN ESTAS!! ARREGLAR
 def ABM_estudiantes():
     while True:
         print()
 
-#def ABM_disciplinas():
-
+def ABM_disciplinas():
+    while True:
+        print()
 def ABM_espacios_deportivos():
-
+    while True:
+        print()
 def ABM_actividades_deportivas():
-
+    while True:
+        print()
 def gestión_inscripciones():
-
+    while True:
+        print()
 def registrar_asistencia():
-
+    while True:
+        print()
 def  reportes():
-
+    while True:
+        print()
 menu()
