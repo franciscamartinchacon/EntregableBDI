@@ -8,7 +8,7 @@ from main import menu
 def menu_disciplinas():
     while True:
         print("\n--- ABM disciplinas ---")
-        print("1. Alta disciplina") #Agregar
+        print("1. Alta disciplina") #Agregar disciplina
         print("2. Borrar disciplina")
         print("3. Actualizar disciplina")
         print("4. Listar disciplinas")
