@@ -1,6 +1,6 @@
 from conexionSQL import get_connection
 from validacion_datos import pedir_entero, pedir_texto_obligatorio, pedir_opcion_valida
-
+from main import menu
 def menu_asistencias():
 
     while True:
@@ -19,6 +19,8 @@ def menu_asistencias():
         elif opcion == "3":
             listar_inscripciones_confirmadas()
         elif opcion == "0":
+            print("Saliendo...")
+            menu()
             break
         else:
             print("Opción inválida. Intente nuevamente.")

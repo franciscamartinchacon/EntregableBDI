@@ -7,20 +7,21 @@ FROM actividadesDeportivas a
 JOIN inscripciones i ON a.id_actividad = i.id_actividad_deportiva
 GROUP BY a.id_actividad, a.nombre
 ORDER BY cant_inscripciones DESC
-Limit 1;
+Limit 3; -- para que no devuelva una sola, sino el top 3
 
 -- 2. Actividades con cupos disponibles.
-SELECT a.id_actividad, a.nombre, (SELECT a.cupo_max - COUNT(*) FROM inscripciones i WHERE i.id_actividad_deportiva = a.id_actividad AND i.estado = 'confirmada') as cant_inscripciones  -- subconslta
+SELECT a.id_actividad, a.nombre, a.estado, (SELECT a.cupo_max - COUNT(*) FROM inscripciones i WHERE i.id_actividad_deportiva = a.id_actividad AND i.estado = 'confirmada') as cant_cupos_disponibles  -- subconslta
 FROM actividadesDeportivas a
-WHERE a.cupo_max > (SELECT COUNT(*) FROM inscripciones i WHERE i.id_actividad_deportiva = a.id_actividad AND i.estado = 'confirmada');
+WHERE a.cupo_max > (SELECT COUNT(*) FROM inscripciones i WHERE i.id_actividad_deportiva = a.id_actividad AND i.estado = 'confirmada')
+ORDER BY cant_cupos_disponibles DESC; #deberia filtar solo actividades abiertas??
 
 -- 3. Cantidad de inscriptos por disciplina deportiva.
-SELECT COUNT(*) as cant_inscriptos, d.nombre
+SELECT COUNT(I.id_inscripcion) as cant_inscriptos, d.nombre
 FROM inscripciones i
-JOIN actividadesDeportivas a on i.id_actividad_deportiva = a.id_actividad
-JOIN disciplinas d on a.id_disciplina = d.id_disciplina
-WHERE i.estado = 'confirmada'
-GROUP BY d.nombre;
+RIGHT JOIN actividadesDeportivas a on i.id_actividad_deportiva = a.id_actividad
+RIGHT JOIN disciplinas d on a.id_disciplina = d.id_disciplina AND i.estado = 'confirmada'
+GROUP BY d.nombre
+ORDER BY cant_inscriptos DESC;
 
 -- 4.1 Cantidad de inscriptos por carrera
 SELECT COUNT(*) cant_inscriptos, c.nombre
@@ -50,9 +51,8 @@ ORDER BY porcentaje_ocupacion DESC;
 -- 6. Porcentaje de asistencia por actividad
 SELECT a.nombre, ROUND(AVG(asis.presente) * 100, 2) AS porcentaje
 FROM actividadesDeportivas a
-         JOIN inscripciones i ON i.id_actividad_deportiva = a.id_actividad
-         JOIN asistencias asis ON i.id_inscripcion = asis.id_inscripcion
-WHERE i.estado = 'confirmada'
+LEFT JOIN inscripciones i ON i.id_actividad_deportiva = a.id_actividad -- para inculir de cero tambien
+LEFT JOIN asistencias asis ON i.id_inscripcion = asis.id_inscripcion AND i.estado = 'confirmada'
 GROUP BY a.nombre
 ORDER BY porcentaje DESC;
 
@@ -67,6 +67,7 @@ HAVING cantidad_inasistencias >= 3
 ORDER BY cantidad_inasistencias DESC;
 
 -- 8. Estudiantes en lista de espera por actividad
+-- VER ORDER BY (ACTIVIDAD?)
 SELECT a.nombre AS actividad, e.nombre, e.apellido, e.documento, i.fecha_inscripcion
 FROM inscripciones i
          JOIN estudiantes e ON i.id_estudiante = e.id_estudiante
