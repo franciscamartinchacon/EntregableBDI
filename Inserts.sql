@@ -18,16 +18,16 @@ INSERT INTO carreras (nombre, id_facultad) VALUES
 
 -- Estudiantes
 INSERT INTO estudiantes (documento, nombre, apellido, correo, id_carrera) VALUES
-('55511122', 'Ana', 'Pérez', 'ana.perez@ucu.edu.uy', 1),
-('55522233', 'Juan', 'García', 'juan.garcia@ucu.edu.uy', 1),
-('55533344', 'Lucía', 'Fernández', 'lucia.fernandez@ucu.edu.uy', 2),
-('55544455', 'Mateo', 'Rodríguez', 'mateo.rodriguez@ucu.edu.uy', 3),
-('55555566', 'Sofía', 'Martínez', 'sofia.martinez@ucu.edu.uy', 4),
-('55566677', 'Valentina', 'Silva', 'valentina.silva@ucu.edu.uy', 5),
-('55577788', 'Tomás', 'López', 'tomas.lopez@ucu.edu.uy', 6),
-('55588899', 'Martina', 'Sosa', 'martina.sosa@ucu.edu.uy', 1),
-('55599900', 'Facundo', 'Ramírez', 'facundo.ramirez@ucu.edu.uy', 2),
-('55600011', 'Camila', 'Méndez', 'camila.mendez@ucu.edu.uy', 3);
+(55511122, 'Ana', 'Pérez', 'ana.perez@ucu.edu.uy', 1),
+(55522233, 'Juan', 'García', 'juan.garcia@ucu.edu.uy', 1),
+(55533344, 'Lucía', 'Fernández', 'lucia.fernandez@ucu.edu.uy', 2),
+(55544455, 'Mateo', 'Rodríguez', 'mateo.rodriguez@ucu.edu.uy', 3),
+(55555566, 'Sofía', 'Martínez', 'sofia.martinez@ucu.edu.uy', 4),
+(55566677, 'Valentina', 'Silva', 'valentina.silva@ucu.edu.uy', 5),
+(55577788, 'Tomás', 'López', 'tomas.lopez@ucu.edu.uy', 6),
+(55588899, 'Martina', 'Sosa', 'martina.sosa@ucu.edu.uy', 1),
+(55599900, 'Facundo', 'Ramírez', 'facundo.ramirez@ucu.edu.uy', 2),
+(55600011, 'Camila', 'Méndez', 'camila.mendez@ucu.edu.uy', 3);
 
 -- Disciplinas deportivas
 INSERT INTO disciplinas (nombre) VALUES

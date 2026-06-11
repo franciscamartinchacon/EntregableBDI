@@ -24,7 +24,7 @@ CREATE TABLE carreras
 CREATE TABLE estudiantes
 (
     id_estudiante int auto_increment,
-    documento   VARCHAR(50) NOT NULL UNIQUE, #unico por cada estudiante
+    documento   INT NOT NULL UNIQUE, #unico por cada estudiante
     nombre      VARCHAR(50) NOT NULL,
     apellido    VARCHAR(50) NOT NULL,
     correo      VARCHAR(50) NOT NULL UNIQUE, #unico por cada estudiante
