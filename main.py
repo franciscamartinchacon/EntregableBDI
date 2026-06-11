@@ -1,4 +1,11 @@
-#MENU PRINCIPAL
+from estudiantes import menu_estudiantes
+from disciplinas import menu_disciplinas
+from espacios import menu_espacios
+from actividades import menu_actividades
+from inscripciones import menu_inscripciones
+from asistencias import menu_asistencias
+from reportes import menu_reportes
+
 
 def menu():
     while True:
@@ -15,21 +22,21 @@ def menu():
         opcion = input("Seleccione una opción: ")
 
         if opcion == "1":
-            ABM_estudiantes()
+            menu_estudiantes()
         elif opcion == "2":
-            ABM_disciplinas()
+            menu_disciplinas()
         elif opcion == "3":
-            ABM_espacios_deportivos()
+            menu_espacios()
         elif opcion == "4":
-            ABM_actividades_deportivas()
+            menu_actividades()
         elif opcion == "5":
-            gestión_inscripciones()
+            menu_inscripciones()
         elif opcion == "6":
-            registrar_asistencia()
+            menu_asistencias()
         elif opcion == "7":
-            reportes()
+            menu_reportes()
         elif opcion == "0":
-            print("Saliendo...")
+            print("Saliendo del sistema...")
             break
         else:
-            print("Opción no válida")
+            print("Opción inválida.")
