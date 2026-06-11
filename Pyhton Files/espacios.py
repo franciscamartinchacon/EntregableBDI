@@ -1,6 +1,7 @@
 from conexionSQL import get_connection
 from validacion_datos import pedir_texto_obligatorio
 from validacion_datos import pedir_entero
+from validacion_datos import pedir_bool
 from main import menu
 
 #Depliega otro menu [agregar, borrar, modificar, disciplinas]
@@ -23,7 +24,7 @@ def menu_disciplinas():
         elif opcion == "3":
             actualizar_espacio()
         elif opcion == "4":
-            listar_espacio()
+            listar_espacios()
         elif opcion == "0":
             print("Saliendo...")
             menu()
@@ -38,7 +39,7 @@ def alta_espacio():
 
     nombre = pedir_texto_obligatorio("Nombre: ")
     ubicacion = pedir_texto_obligatorio("Ubicación: ")
-    libre = #VER COMO HACER EL BOOLEN
+    libre = pedir_bool("Libre (s/n): ")
 
     conexion = None
     cursor = None
@@ -130,7 +131,7 @@ def actualizar_espacio():
     print("\nIngrese los nuevos datos del espacio: ")
     nombre = pedir_texto_obligatorio("Nuevo nombre: ")
     ubicacion = pedir_texto_obligatorio("Nueva ubicación: ")
-    libre = #VER QUE ONDA
+    libre = pedir_bool("Libre (s/n): ")
 
     conexion = None
     cursor = None

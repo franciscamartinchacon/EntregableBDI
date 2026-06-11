@@ -44,4 +44,19 @@ def pedir_opcion_valida(mensaje, opciones_validas):
         print("Error: opción inválida.")
         print("Opciones válidas:", ", ".join(opciones_validas))
 
+
+def pedir_bool(mensaje):
+    # Pide s/n por consola y luego lo convierte a True o False
+    while True:
+        valor = input(mensaje).strip().lower() #saa espacios en blanco y en minuscula
+
+        if valor == "":
+            print("Error. Este campo no puede estar vacío.")
+        elif valor == "s":
+            return True
+        elif valor == "n":
+            return False
+        else:
+            print("Eror. Ingrese un valor válido.")
+
 #normalizar datos???
