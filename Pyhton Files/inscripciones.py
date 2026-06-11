@@ -1,6 +1,5 @@
 
 from conexionSQL import get_connection
-from validacion_datos import pedir_texto_obligatorio
 from validacion_datos import pedir_entero
 from estudiantes import listar_estudiantes
 from actividades import listar_actividades
