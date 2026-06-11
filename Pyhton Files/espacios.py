@@ -2,7 +2,6 @@ from conexionSQL import get_connection
 from validacion_datos import pedir_texto_obligatorio
 from validacion_datos import pedir_entero
 from validacion_datos import pedir_bool
-from main import menu
 
 #Depliega otro menu [agregar, borrar, modificar, disciplinas]
 
@@ -27,7 +26,6 @@ def menu_espacios():
             listar_espacios()
         elif opcion == "0":
             print("Saliendo...")
-            menu()
             break
         else:
             print("Opción no válida")
@@ -80,7 +78,7 @@ def borrar_espacio():
 
     id_espacio = pedir_entero("\nIngrese el ID del espacio a eliminar: ")
 
-    confirmacion = input("¿Seguro que desea eliminar este espacio? (s/n): ").lower()
+    confirmacion = input("¿Seguro que desea eliminar este espacio? (si/no): ").lower()
 
     if confirmacion != "s":
         print("Operación cancelada.")
@@ -131,7 +129,7 @@ def actualizar_espacio():
     print("\nIngrese los nuevos datos del espacio: ")
     nombre = pedir_texto_obligatorio("Nuevo nombre: ")
     ubicacion = pedir_texto_obligatorio("Nueva ubicación: ")
-    libre = pedir_bool("Libre (s/n): ")
+    libre = pedir_bool("Libre (si/no): ")
 
     conexion = None
     cursor = None
@@ -192,14 +190,13 @@ def listar_espacios():
             """
 
         cursor.execute(sql)
-        encontro = False
-        for espacio in cursor:
-            encontro = False
-            print(f"ID: {espacio[0]} | Nombre: {espacio[1]}")
+        espacios = cursor.fetchall()
 
-        if not encontro:
+        if len(espacios) == 0:
             print("No hay espacios deportivos cargados")
-
+        else:
+            for espacio in espacios:
+                print(f"ID: {espacio[0]} | Nombre: {espacio[1]}")
 
     except Exception as e:
         print("Error al listar espacios deportivos:")

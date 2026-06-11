@@ -1,7 +1,7 @@
 from conexionSQL import get_connection
 from validacion_datos import pedir_texto_obligatorio
 from validacion_datos import pedir_entero
-from main import menu
+
 
 # MENÚ DE ESTUDIANTES
 
@@ -26,7 +26,6 @@ def menu_estudiantes():
             eliminar_estudiante()
         elif opcion == "0":
             print("Saliendo...")
-            menu()
             break
         else:
             print("Opción inválida. Intente nuevamente.")
@@ -263,7 +262,7 @@ def eliminar_estudiante():
 
         sql = """
             DELETE FROM estudiantes
-            WHERE id_estudiante = %si;
+            WHERE id_estudiante = %s;
         """
 
         cursor.execute(sql, (id_estudiante,))

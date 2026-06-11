@@ -1,7 +1,6 @@
 from conexionSQL import get_connection
 from validacion_datos import pedir_texto_obligatorio
 from validacion_datos import pedir_entero
-from main import menu
 
 #Depliega otro menu [agregar, borrar, modificar, disciplinas]
 
@@ -12,7 +11,6 @@ def menu_disciplinas():
         print("2. Borrar disciplina")
         print("3. Actualizar disciplina")
         print("4. Listar disciplinas")
-        print("5. Volver al menú principal")
         print("0. Salir")
 
         opcion = input("Seleccione una opción: ")
@@ -25,8 +23,6 @@ def menu_disciplinas():
             actualizar_disciplina()
         elif opcion == "4":
             listar_disciplinas()
-        elif opcion == "5":
-            menu()
         elif opcion == "0":
             print("Saliendo...")
             break
@@ -77,9 +73,9 @@ def borrar_disciplina():
 
     listar_disciplinas()
 
-    id_disciplina = pedir_entero("\nIngrese el ID del estudiante a eliminar: ")
+    id_disciplina = pedir_entero("\nIngrese el ID de la disciplina a eliminar: ")
 
-    confirmacion = input("¿Seguro que desea eliminar esta disciplina? (s/n): ").lower()
+    confirmacion = input("¿Seguro que desea eliminar esta disciplina? (si/no): ").lower()
 
     if confirmacion != "s":
         print("Operación cancelada.")
@@ -106,7 +102,7 @@ def borrar_disciplina():
             print("No se encontró una disciplina con ese ID.")
 
     except Exception as e:
-        print("Error al eliminar disciplina:")
+        print("Error al eliminar disciplina, puede que haya una actividad relacionada:")
         print(e)
 
     finally:
@@ -185,17 +181,16 @@ def listar_disciplinas():
             """
 
         cursor.execute(sql)
-        encontro = False
-        for disciplina in cursor:
-            encontro = False
-            print(f"ID: {disciplina[0]} | Nombre: {disciplina[1]}")
+        disciplinas = cursor.fetchall()
 
-        if not encontro:
+        if len(disciplinas) == 0:
             print("No hay disciplinas cargadas")
-
+        else:
+            for disciplina in disciplinas:
+                print(f"ID: {disciplina[0]} | Nombre: {disciplina[1]}")
 
     except Exception as e:
-        print("Error al listar estudiantes:")
+        print("Error al listar disciplinas")
         print(e)
 
     finally:

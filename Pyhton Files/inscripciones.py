@@ -3,7 +3,6 @@ from conexionSQL import get_connection
 from validacion_datos import pedir_entero
 from estudiantes import listar_estudiantes
 from actividades import listar_actividades
-from main import menu
 
 def gestion_inscripciones():
     while True:
@@ -20,7 +19,6 @@ def gestion_inscripciones():
             listar_inscripciones()
         elif opcion == "0":
             print("Saliendo...")
-            menu()
             break
         else:
             print("Opción inválida. Intente nuevamente.")

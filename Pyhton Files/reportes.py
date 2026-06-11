@@ -1,5 +1,5 @@
 from conexionSQL import get_connection
-from main import menu
+
 #despielga un menu con las consultas
 def menu_reportes():
     while True:
@@ -121,7 +121,6 @@ def menu_reportes():
             """
         elif opcion == "0":
             print("Saliendo...")
-            menu()
             break
         else:
             print("Opción inválida. Intente nuevamente.")

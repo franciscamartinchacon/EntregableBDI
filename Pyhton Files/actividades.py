@@ -1,5 +1,4 @@
 from validacion_datos import pedir_texto_obligatorio, pedir_entero, pedir_entero_positivo, pedir_opcion_valida
-from main import menu
 from disciplinas import listar_disciplinas
 from espacios import listar_espacios
 
@@ -28,7 +27,6 @@ def menu_actividades():
             cambiar_estado_actividad()
         elif opcion == "0":
             print("Saliendo...")
-            menu()
             break
         else:
             print("Opción inválida. Intente nuevamente.")

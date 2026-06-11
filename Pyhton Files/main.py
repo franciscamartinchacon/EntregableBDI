@@ -6,7 +6,6 @@ from inscripciones import gestion_inscripciones
 from asistencias import menu_asistencias
 from reportes import menu_reportes
 
-
 def menu():
     while True:
         print("\n--- Sistema de Actividades Deportivas ---")
@@ -40,3 +39,5 @@ def menu():
             break
         else:
             print("Opción inválida.")
+
+menu()
