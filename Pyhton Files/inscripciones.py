@@ -102,7 +102,7 @@ def listar_inscripciones():
                     SELECT 
                         i.id_inscripcion, i.id_estudiante, i.id_actividad_deportiva, i.fecha_inscripcion, i.estado
                     FROM inscripciones i
-                    ORDER BY  i.id_inscripcion, i.id_estudiante, i.id_actividad_deportiva, i.fecha_inscripcion, i.estado;
+                    ORDER BY  i.id_inscripcion;
                 """
 
         cursor.execute(sql)

@@ -146,7 +146,7 @@ def listar_estudiantes():
                 ON e.id_carrera = c.id_carrera
             JOIN facultades f 
                 ON c.id_facultad = f.id_facultad
-            ORDER BY e.apellido, e.nombre;
+            ORDER BY e.id_estudiante, e.apellido, e.nombre;
         """
 
         cursor.execute(sql)
