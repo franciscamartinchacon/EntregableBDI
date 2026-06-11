@@ -1,4 +1,5 @@
 from conexionSQL import get_connection
+from datetime import datetime
 from validacion_datos import pedir_entero, pedir_texto_obligatorio, pedir_opcion_valida
 
 def menu_asistencias():
@@ -109,6 +110,7 @@ def obtener_inscripcion_confirmada(id_inscripcion):
         if conexion is not None:
             conexion.close()
 
+
 def registrar_asistencia():
 
     print("\n--- Registrar asistencia ---")
@@ -130,8 +132,14 @@ def registrar_asistencia():
     )
 
     fecha_texto = pedir_texto_obligatorio("Fecha de asistencia (DD/MM/AAAA): ")
-    fecha = strptime(fecha_texto, "%d/%m/%Y")
-    fecha_sql = fecha.strftime("%Y/%m/%d")
+
+    try:
+        fecha = datetime.strptime(fecha_texto, "%d/%m/%Y").date()
+    except ValueError:
+        print("Error: la fecha debe tener el formato DD/MM/AAAA.")
+        return
+
+    fecha_sql = fecha.strftime("%Y-%m-%d")
 
     opciones_validas = ["si", "no"]
     respuesta = pedir_opcion_valida("¿Estuvo presente? (si/no): ", opciones_validas)
@@ -171,7 +179,6 @@ def registrar_asistencia():
             cursor.close()
         if conexion is not None:
             conexion.close()
-
 def listar_asistencias():
 
     print("\n--- Listado de asistencias ---")
