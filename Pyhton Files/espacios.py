@@ -6,7 +6,7 @@ from main import menu
 
 #Depliega otro menu [agregar, borrar, modificar, disciplinas]
 
-def menu_disciplinas():
+def menu_espacios():
     while True:
         print("\n--- ABM disciplinas ---")
         print("1. Alta espacio deportivo") #Agregar disciplina

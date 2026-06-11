@@ -2,7 +2,7 @@ from estudiantes import menu_estudiantes
 from disciplinas import menu_disciplinas
 from espacios import menu_espacios
 from actividades import menu_actividades
-from inscripciones import menu_inscripciones
+from inscripciones import gestion_inscripciones
 from asistencias import menu_asistencias
 from reportes import menu_reportes
 
@@ -30,7 +30,7 @@ def menu():
         elif opcion == "4":
             menu_actividades()
         elif opcion == "5":
-            menu_inscripciones()
+            gestion_inscripciones()
         elif opcion == "6":
             menu_asistencias()
         elif opcion == "7":
