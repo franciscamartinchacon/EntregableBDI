@@ -4,7 +4,29 @@ from validacion_datos import pedir_texto_obligatorio
 from validacion_datos import pedir_entero
 from estudiantes import listar_estudiantes
 from actividades import listar_actividades
+from main import menu
 
+def gestion_inscripciones():
+    while True:
+        print("\n--- Gestión Inscripciones ---")
+        print("1. Inscribir estudiante")
+        print("2. Listar inscripciones")
+        print("0. Volver al menú principal")
+
+        opcion = input("Seleccione una opción: ")
+
+        if opcion == "1":
+            inscribir_estudiante()
+        elif opcion == "2":
+            listar_inscripciones()
+        elif opcion == "0":
+            print("Saliendo...")
+            menu()
+            break
+        else:
+            print("Opción inválida. Intente nuevamente.")
+
+# Inscribir estudiante a una actividad
 def inscribir_estudiante():
     print("\n--- Insribir estudiante ---")
 
@@ -61,6 +83,44 @@ def inscribir_estudiante():
         print("Error al crear inscricpción:")
         print(e)
         print("Puede ser que el id del estudiante o  id de la activividad no sea válidos.")
+
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if conexion is not None:
+            conexion.close()
+
+
+def listar_inscripciones():
+    print("\n--- Listado de inscripciones ---")
+
+    conexion = None
+    cursor = None
+
+    try:
+        conexion = get_connection()
+        cursor = conexion.cursor()
+
+        sql = """
+                    SELECT 
+                        i.id_inscripcion, i.id_estudiante, i.id_actividad_deportiva, i.fecha_inscripcion, i.estado
+                    FROM inscripciones i
+                    ORDER BY  i.id_inscripcion, i.id_estudiante, i.id_actividad_deportiva, i.fecha_inscripcion, i.estado;
+                """
+
+        cursor.execute(sql)
+        encontro = False
+        for inscripcion in cursor:
+            encontro = False
+            print(f"ID Inscripción: {inscripcion[0]} | ID Estudiante: {inscripcion[1]} | ID Actividad Deportiva: {inscripcion[2]} | Fecha: {inscripcion[3]} | Estado: {inscripcion[4]}")
+
+        if not encontro:
+            print("No hay inscripciones cargadas")
+
+
+    except Exception as e:
+        print("Error al listar inscripciones:")
+        print(e)
 
     finally:
         if cursor is not None:
