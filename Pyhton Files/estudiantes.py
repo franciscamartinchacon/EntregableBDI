@@ -181,16 +181,36 @@ def modificar_estudiante():
 
     listar_estudiantes()
 
-    id_estudiante = pedir_entero("\nIngrese el ID del estudiante a modificar: ")
+    documento = pedir_entero("\nIngrese el documento del estudiante a modificar: ")
 
-    print("\nIngrese los nuevos datos del estudiante:")
-    documento = pedir_texto_obligatorio("Nuevo documento: ")
+    while True:
+        print("\n--- Ingrese el dato que quiere modificar ---")
+        print("1. Nombre del estudiante")
+        print("2. Apellido del estudiante")
+        print("3. Correo del estudiante")
+        print("4. Carrera del estudiante")
+        print("0. Volver al menú de estudiantes")
+
+        opcion = input("Seleccione una opción: ")
+
+        if opcion == "1":
+            modificar_nombre()
+        elif opcion == "2":
+            modificar_apellido()
+        elif opcion == "3":
+            modificar_correo()
+        elif opcion == "4":
+            modificar_carrera()
+        elif opcion == "0":
+            print("Volviendo al menú de estudiantes...")
+            break
+        else:
+            print("Opción inválida. Intente nuevamente.")
+
+def modificar_nombre(documento):
+    print("\nIngrese el nuevo nombre del estudiante:")
+
     nombre = pedir_texto_obligatorio("Nuevo nombre: ")
-    apellido = pedir_texto_obligatorio("Nuevo apellido: ")
-    correo = pedir_texto_obligatorio("Nuevo correo electrónico: ")
-
-    listar_carreras()
-    id_carrera = pedir_entero("Nuevo ID de carrera: ")
 
     conexion = None
     cursor = None
@@ -201,35 +221,128 @@ def modificar_estudiante():
 
         sql = """
             UPDATE estudiantes
-            SET documento = %s,
-                nombre = %s,
-                apellido = %s,
-                correo = %s,
-                id_carrera = %s
-            WHERE id_estudiante = %s;
+            SET nombre = %s
+            WHERE documento = %s;
         """
 
-        valores = (
-            documento,
-            nombre,
-            apellido,
-            correo,
-            id_carrera,
-            id_estudiante
-        )
+        valores = (nombre, documento)
 
         cursor.execute(sql, valores)
         conexion.commit()
 
         if cursor.rowcount > 0:
-            print("Estudiante modificado correctamente.")
+            print("Nombre modificado correctamente.")
         else:
-            print("No se encontró un estudiante con ese ID.")
+            print("No se encontró un estudiante con ese documento.")
 
     except Exception as e:
-        print("Error al modificar estudiante:")
+        print("Error al modificar el nombre del estudiante:")
         print(e)
-        print("Puede ser que el documento o correo ya existan, o que la carrera no sea válida.")
+
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if conexion is not None:
+            conexion.close()
+
+def modificar_apellido(documento):
+    apellido = pedir_texto_obligatorio("Nuevo apellido: ")
+
+    conexion = None
+    cursor = None
+
+    try:
+        conexion = get_connection()
+        cursor = conexion.cursor()
+
+        sql = """
+            UPDATE estudiantes
+            SET apellido = %s
+            WHERE documento = %s;
+        """
+
+        cursor.execute(sql, (apellido, documento))
+        conexion.commit()
+
+        if cursor.rowcount > 0:
+            print("Apellido modificado correctamente.")
+        else:
+            print("No se encontró un estudiante con ese documento.")
+
+    except Exception as e:
+        print("Error al modificar el apellido:")
+        print(e)
+
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if conexion is not None:
+            conexion.close()
+
+def modificar_correo(documento):
+    correo = pedir_texto_obligatorio("Nuevo correo: ")
+
+    conexion = None
+    cursor = None
+
+    try:
+        conexion = get_connection()
+        cursor = conexion.cursor()
+
+        sql = """
+            UPDATE estudiantes
+            SET correo = %s
+            WHERE documento = %s;
+        """
+
+        cursor.execute(sql, (correo, documento))
+        conexion.commit()
+
+        if cursor.rowcount > 0:
+            print("Correo modificado correctamente.")
+        else:
+            print("No se encontró un estudiante con ese documento.")
+
+    except Exception as e:
+        print("Error al modificar el correo:")
+        print(e)
+
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if conexion is not None:
+            conexion.close()
+
+def modificar_carrera(documento):
+    print("\n--- Carreras disponibles ---")
+    listar_carreras()
+
+    id_carrera = pedir_entero("Ingrese el ID de la nueva carrera: ")
+
+    conexion = None
+    cursor = None
+
+    try:
+        conexion = get_connection()
+        cursor = conexion.cursor()
+
+        sql = """
+            UPDATE estudiantes
+            SET id_carrera = %s
+            WHERE documento = %s;
+        """
+
+        cursor.execute(sql, (id_carrera, documento))
+        conexion.commit()
+
+        if cursor.rowcount > 0:
+            print("Carrera modificada correctamente.")
+        else:
+            print("No se encontró un estudiante con ese documento.")
+
+    except Exception as e:
+        print("Error al modificar la carrera:")
+        print(e)
 
     finally:
         if cursor is not None:

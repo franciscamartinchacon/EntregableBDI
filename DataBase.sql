@@ -37,16 +37,16 @@ CREATE TABLE estudiantes
 CREATE TABLE disciplinas
 (
     id_disciplina    INT AUTO_INCREMENT,
-    nombre         VARCHAR(50) NOT NULL UNIQUE,
+    nombre           VARCHAR(50) NOT NULL UNIQUE,
     PRIMARY KEY (id_disciplina)
 );
 
 CREATE TABLE espaciosDeportivos
 (
     id_espacio  INT AUTO_INCREMENT,
-    nombre      VARCHAR(50) ,
-    ubicacion   VARCHAR(100),
-    libre       BOOLEAN,
+    nombre      VARCHAR(50) NOT NULL,
+    ubicacion   VARCHAR(100) NOT NULL,
+    libre       BOOLEAN NOT NULL,
 
     PRIMARY KEY (id_espacio)
 );
@@ -74,13 +74,13 @@ CREATE TABLE actividadesDeportivas
 CREATE TABLE inscripciones
 (
     id_inscripcion          INT AUTO_INCREMENT,
-    id_estudiante           INT,
-    id_actividad_deportiva  INT,
+    id_estudiante           INT NOT NULL,
+    id_actividad_deportiva  INT NOT NULL,
     fecha_inscripcion       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     estado                  ENUM ('confirmada','lista_espera'),
     PRIMARY KEY (id_estudiante, id_actividad_deportiva,fecha_inscripcion), #controla que un mismo alumno solo se pueda anotar a una misma actividad por dia
     FOREIGN KEY (id_estudiante) REFERENCES estudiantes(id_estudiante),
-    FOREIGN KEY (id_actividad_deportiva) REFERENCES actividadesDeportivas(id_actividad),
+    FOREIGN KEY (id_actividad_deportiva) REFERENCES actividadesDeportivas(id_actividad)
 );
 
 CREATE TABLE asistencias
