@@ -50,42 +50,42 @@ INSERT INTO espaciosDeportivos (nombre, ubicacion, libre) VALUES
 
 -- Actividades deportivas
 INSERT INTO actividadesDeportivas
-(nombre, id_disciplina, id_espacio, cupo_max, dia_semana, fecha, horario, estado)
+(nombre, id_disciplina, id_espacio, cupo_max, dia_semana, fecha, hora_inicio, hora_fin, estado)
 VALUES
-('Fútbol recreativo mixto', 1, 3, 2, 'lunes', '2026-06-10', '18:00:00', 'abierta'),
-('Funcional turno mañana', 6, 6, 3, 'martes', '2026-06-11', '08:00:00', 'abierta'),
-('Yoga inicial', 5, 2, 2, 'miercoles', '2026-06-12', '19:00:00', 'abierta'),
-('Atletismo inicial', 3, 5, 4, 'jueves', '2026-06-13', '17:30:00', 'cerrada'),
-('Básquetbol recreativo', 2, 1, 5, 'viernes', '2026-06-14', '18:30:00', 'abierta'),
-('Vóleibol mixto', 4, 4, 4, 'sabado', '2026-06-15', '10:00:00', 'cancelada'),
-('Gimnasio libre', 7, 1, 6, 'lunes', '2026-06-16', '09:00:00', 'abierta');
+('Fútbol recreativo mixto', 1, 3, 2, 'lunes', '2026-06-10', '18:00:00', '19:00:00', 'abierta'),
+('Funcional turno mañana', 6, 6, 3, 'martes', '2026-06-11', '08:00:00', '09:00:00', 'abierta'),
+('Yoga inicial', 5, 2, 2, 'miercoles', '2026-06-12', '19:00:00', '20:00:00', 'abierta'),
+('Atletismo inicial', 3, 5, 4, 'jueves', '2026-06-13', '17:30:00', '18:30:00', 'cerrada'),
+('Básquetbol recreativo', 2, 1, 5, 'viernes', '2026-06-14', '18:30:00', '20:00:00', 'abierta'),
+('Vóleibol mixto', 4, 4, 4, 'sabado', '2026-06-15', '10:00:00', '11:30:00', 'cancelada'),
+('Gimnasio libre', 7, 1, 6, 'lunes', '2026-06-16', '09:00:00', '10:00:00', 'abierta');
 
 -- Inscripciones
 INSERT INTO inscripciones
-(id_estudiante, id_actividad_deportiva, estado)
+(documento, id_actividad, estado)
 VALUES
-(1, 1, 'confirmada'),
-(2, 1, 'confirmada'),
-(3, 1, 'lista_espera'),
+(55511122, 1, 'confirmada'),
+(55522233, 1, 'confirmada'),
+(55533344, 1, 'lista_espera'),
 
-(4, 2, 'confirmada'),
-(5, 2, 'confirmada'),
-(6, 2, 'confirmada'),
+(55544455, 2, 'confirmada'),
+(55555566, 2, 'confirmada'),
+(55566677, 2, 'confirmada'),
 
-(7, 3, 'confirmada'),
-(8, 3, 'confirmada'),
+(55577788, 3, 'confirmada'),
+(55588899, 3, 'confirmada'),
 
-(1, 5, 'confirmada'),
-(3, 5, 'confirmada'),
-(5, 5, 'confirmada'),
+(55511122, 5, 'confirmada'),
+(55533344, 5, 'confirmada'),
+(55555566, 5, 'confirmada'),
 
-(7, 2, 'lista_espera'),
-(10, 3, 'lista_espera'),
+(55577788, 2, 'lista_espera'),
+(55600011, 3, 'lista_espera'),
 
-(2, 7, 'confirmada'),
-(4, 7, 'confirmada'),
-(6, 7, 'confirmada'),
-(9,7,'confirmada');
+(55522233, 7, 'confirmada'),
+(55544455, 7, 'confirmada'),
+(55566677, 7, 'confirmada'),
+(55599900, 7, 'confirmada');
 
 -- Asistencias
 INSERT INTO asistencias

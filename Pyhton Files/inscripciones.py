@@ -23,15 +23,57 @@ def gestion_inscripciones():
         else:
             print("Opción inválida. Intente nuevamente.")
 
+def tiene_conflicto_horario(documento, id_actividad_nueva):
+    conexion = None
+    cursor = None
+
+    try:
+        conexion = get_connection()
+        cursor = conexion.cursor()
+
+        sql = """
+            SELECT COUNT(*)
+            FROM inscripciones i
+            JOIN actividadesDeportivas actual
+                ON i.id_actividad_deportiva = actual.id_actividad
+            JOIN actividadesDeportivas nueva
+                ON nueva.id_actividad = %s
+            WHERE i.documento = %s
+              AND i.estado = 'confirmada'
+              AND actual.fecha = nueva.fecha
+              AND actual.hora_inicio < nueva.hora_fin
+              AND actual.hora_fin > nueva.hora_inicio;
+        """
+
+        cursor.execute(sql, (id_actividad_nueva, documento))
+        resultado = cursor.fetchone()
+
+        return resultado[0] > 0
+
+    except Exception as e:
+        print("Error al verificar conflicto de horario:")
+        print(e)
+        return True
+
+    finally:
+        if cursor:
+            cursor.close()
+        if conexion:
+            conexion.close()
+
 # Inscribir estudiante a una actividad
 def inscribir_estudiante():
     print("\n--- Insribir estudiante ---")
 
     listar_estudiantes()
-    id_estudiante = pedir_entero("Ingrese el ID del Estudiante: ")
+    documento = pedir_entero("Ingrese el documento del Estudiante: ")
 
     listar_actividades()
-    id_actividad_deportiva = pedir_entero("Ingrese el ID de la Actvividad Deportiva: ")
+    id_actividad = pedir_entero("Ingrese el ID de la Actvividad Deportiva: ")
+
+    if tiene_conflicto_horario(documento, id_actividad):
+        print("El estudiante ya tiene una actividad confirmada en ese horario.")
+        return
 
     conexion = None
     cursor = None
@@ -44,12 +86,12 @@ def inscribir_estudiante():
         sql_verificar = """
                 SELECT estado, cupoMax,
                        (SELECT COUNT(*) FROM inscripciones 
-                        WHERE id_actividad_deportiva = %s AND estado = 'confirmada') as inscriptos
+                        WHERE id_actividad = %s AND estado = 'confirmada') as inscriptos
                 FROM actividadesDeportivas
                 WHERE id_actividad = %s
             """
 
-        cursor.execute(sql_verificar, (id_actividad_deportiva, id_actividad_deportiva))
+        cursor.execute(sql_verificar, (id_actividad, id_actividad))
         actividad = cursor.fetchone()
 
         if actividad is None:
@@ -65,11 +107,11 @@ def inscribir_estudiante():
 
         sql = """
                 INSERT INTO inscripciones 
-                (id_estudiante, id_actividad_deportiva, estado)
+                (documento, id_actividad, estado)
                 VALUES (%s, %s, %s);
             """
 
-        valores = (id_estudiante, id_actividad_deportiva, estado)
+        valores = (documento, id_actividad, estado)
 
         cursor.execute(sql, valores)
         conexion.commit()
@@ -79,7 +121,7 @@ def inscribir_estudiante():
     except Exception as e:
         print("Error al crear inscricpción:")
         print(e)
-        print("Puede ser que el id del estudiante o  id de la activividad no sea válidos.")
+        print("Puede ser que el documento del estudiante o  id de la activividad no sea válidos.")
 
     finally:
         if cursor is not None:
@@ -101,7 +143,7 @@ def listar_inscripciones():
 
         sql = """
                     SELECT 
-                        i.id_inscripcion, i.id_estudiante, i.id_actividad_deportiva, i.fecha_inscripcion, i.estado
+                        i.id_inscripcion, i.documento, i.id_actividad, i.fecha_inscripcion, i.estado
                     FROM inscripciones i
                     ORDER BY  i.id_inscripcion;
                 """
@@ -110,7 +152,7 @@ def listar_inscripciones():
         encontro = False
         for inscripcion in cursor:
             encontro = False
-            print(f"ID Inscripción: {inscripcion[0]} | ID Estudiante: {inscripcion[1]} | ID Actividad Deportiva: {inscripcion[2]} | Fecha: {inscripcion[3]} | Estado: {inscripcion[4]}")
+            print(f"ID Inscripción: {inscripcion[0]} | Documento Estudiante: {inscripcion[1]} | ID Actividad Deportiva: {inscripcion[2]} | Fecha: {inscripcion[3]} | Estado: {inscripcion[4]}")
 
         if not encontro:
             print("No hay inscripciones cargadas")

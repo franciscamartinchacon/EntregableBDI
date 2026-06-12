@@ -72,7 +72,8 @@ def alta_actividad():
     )
 
     fecha = strptime(pedir_texto_obligatorio("Fecha (AAAA-MM-DD): "))
-    horario = datetime.strptime(pedir_texto_obligatorio("Horario (HH:MM): "))
+    hora_inicio = pedir_texto_obligatorio("Hora de inicio (HH:MM:SS): ")
+    hora_fin = pedir_texto_obligatorio("Hora de fin (HH:MM:SS): ")
 
     estados_validos = [
         "abierta",
@@ -95,8 +96,8 @@ def alta_actividad():
 
         sql = """
             INSERT INTO actividadesDeportivas
-            (nombre, id_disciplina, id_espacio, cupo_max, dia_semana, fecha, horario, estado)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
+            (nombre, id_disciplina, id_espacio, cupo_max, dia_semana, fecha, hora_inicio, hora_fin, estado)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
         """
 
         valores = (
@@ -106,7 +107,8 @@ def alta_actividad():
             cupo_max,
             dia_semana,
             fecha,
-            horario,
+            hora_inicio,
+            hora_fin,
             estado
         )
 
@@ -139,12 +141,10 @@ def listar_actividades():
         cursor = conexion.cursor()
 
         sql = """
-            SELECT a.id_actividad, a.nombre, d.nombre AS disciplina, e.nombre AS espacio, e.ubicacion, a.cupo_max, a.dia_semana, a.fecha, a.horario, a.estado
+            SELECT a.id_actividad, a.nombre, d.nombre AS disciplina, e.nombre AS espacio, e.ubicacion, a.cupo_max, a.dia_semana, a.fecha, a.hora_inicio, a.hora_fin, a.estado
             FROM actividadesDeportivas a
-            JOIN disciplinas d
-                ON a.id_disciplina = d.id_disciplina
-            JOIN espaciosDeportivos e
-                ON a.id_espacio = e.id_espacio
+            JOIN disciplinas d ON a.id_disciplina = d.id_disciplina
+            JOIN espaciosDeportivos e ON a.id_espacio = e.id_espacio
             ORDER BY a.fecha, a.horario;
         """
 
@@ -164,8 +164,9 @@ def listar_actividades():
                     f"Cupo máximo: {actividad[5]} | "
                     f"Día: {actividad[6]} | "
                     f"Fecha: {actividad[7]} | "
-                    f"Horario: {actividad[8]} | "
-                    f"Estado: {actividad[9]}"
+                    f"Hora_inicio: {actividad[8]} | "
+                    f"Hora_fin: {actividad[9]} | "
+                    f"Estado: {actividad[10]}"
                 )
 
     except Exception as e:
@@ -195,8 +196,9 @@ def modificar_actividad():
         print("4. Cupo máximo")
         print("5. Día de la semana")
         print("6. Fecha")
-        print("7. Horario")
-        print("8. Estado")
+        print("7. Hora inicio")
+        print("8. Hora fin")
+        print("9. Estado")
         print("0. Volver al menú de actividades")
 
         opcion = input("Seleccione una opción: ")
@@ -456,40 +458,43 @@ def modificar_fecha_actividad(id_actividad):
                 conexion.close()
 
 def modificar_horario_actividad(id_actividad):
+    #Modifica la hora de inicio y la hora de fin de una actividad deportiva.
 
-        horario = pedir_texto_obligatorio("Nuevo horario (HH:MM:SS): ")
+    hora_inicio = pedir_texto_obligatorio("Nueva hora de inicio (HH:MM:SS): ")
+    hora_fin = pedir_texto_obligatorio("Nueva hora de fin (HH:MM:SS): ")
 
-        conexion = None
-        cursor = None
+    conexion = None
+    cursor = None
 
-        try:
-            conexion = get_connection()
-            cursor = conexion.cursor()
+    try:
+        conexion = get_connection()
+        cursor = conexion.cursor()
 
-            sql = """
-                UPDATE actividadesDeportivas
-                SET horario = %s
-                WHERE id_actividad = %s;
-            """
+        sql = """
+            UPDATE actividadesDeportivas
+            SET hora_inicio = %s,
+                hora_fin = %s
+            WHERE id_actividad = %s;
+        """
 
-            cursor.execute(sql, (horario, id_actividad))
-            conexion.commit()
+        cursor.execute(sql, (hora_inicio, hora_fin, id_actividad))
+        conexion.commit()
 
-            if cursor.rowcount > 0:
-                print("Horario de la actividad modificado correctamente.")
-            else:
-                print("No se encontró una actividad con ese ID.")
+        if cursor.rowcount > 0:
+            print("Horario de la actividad modificado correctamente.")
+        else:
+            print("No se encontró una actividad con ese ID.")
 
-        except Exception as e:
-            print("Error al modificar el horario de la actividad:")
-            print(e)
-            print("Revise que el horario tenga formato HH:MM:SS.")
+    except Exception as e:
+        print("Error al modificar el horario de la actividad:")
+        print(e)
+        print("Revise que las horas tengan formato HH:MM:SS y que la hora de fin sea mayor a la hora de inicio.")
 
-        finally:
-            if cursor is not None:
-                cursor.close()
-            if conexion is not None:
-                conexion.close()
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if conexion is not None:
+            conexion.close()
 
 def modificar_estado_actividad(id_actividad):
 

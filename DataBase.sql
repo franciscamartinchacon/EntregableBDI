@@ -58,29 +58,31 @@ CREATE TABLE actividadesDeportivas
     id_disciplina   INT NOT NULL,
     id_espacio      INT NOT NULL,
     cupo_max        INT NOT NULL,
-    dia_semana      ENUM('lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'), #unicos valores aceptados
+    dia_semana      ENUM('lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo') NOT NULL,
     fecha           DATE NOT NULL,
-    horario         TIME NOT NULL,
-    estado          ENUM('abierta', 'cerrada', 'finalizada', 'cancelada'), #unicos valores aceptados
+    hora_inicio     TIME NOT NULL,
+    hora_fin        TIME NOT NULL,
+    estado          ENUM('abierta', 'cerrada', 'finalizada', 'cancelada') NOT NULL,
 
     PRIMARY KEY (id_actividad),
     FOREIGN KEY (id_disciplina) REFERENCES disciplinas(id_disciplina),
     FOREIGN KEY (id_espacio) REFERENCES espaciosDeportivos(id_espacio),
 
-    CHECK (cupo_max > 0)
+    CHECK (cupo_max > 0),
+    CHECK (hora_fin > hora_inicio)
 );
 
 CREATE TABLE inscripciones
 (
     id_inscripcion          INT AUTO_INCREMENT,
     documento               INT NOT NULL,
-    id_actividad_deportiva  INT NOT NULL,
+    id_actividad            INT NOT NULL,
     fecha_inscripcion       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    estado                  ENUM ('confirmada','lista_espera'),
+    estado                  ENUM ('confirmada','lista_espera') NOT NULL,
     PRIMARY KEY (id_inscripcion),
-    UNIQUE (documento, id_actividad_deportiva,fecha_inscripcion), #controla que un mismo alumno solo se pueda anotar a una misma actividad por dia
+    UNIQUE (documento, id_actividad), #controla que un mismo alumno solo se pueda anotar a una misma actividad por dia
     FOREIGN KEY (documento) REFERENCES estudiantes(documento),
-    FOREIGN KEY (id_actividad_deportiva) REFERENCES actividadesDeportivas(id_actividad)
+    FOREIGN KEY (id_actividad) REFERENCES actividadesDeportivas(id_actividad)
 );
 
 CREATE TABLE asistencias
