@@ -17,18 +17,21 @@ def menu_disciplinas():
 
         if opcion == "1":
             alta_disciplina()
+            presione_enter()
         elif opcion == "2":
             borrar_disciplina()
+            presione_enter()
         elif opcion == "3":
             modificar_disciplina()
+            presione_enter()
         elif opcion == "4":
             listar_disciplinas()
+            presione_enter()
         elif opcion == "0":
             print("Saliendo...")
             break
         else:
             print("Opción no válida")
-
 
 
 def alta_disciplina():
@@ -67,7 +70,6 @@ def alta_disciplina():
         if conexion is not None:
             conexion.close()
 
-        presione_enter()
 
 def borrar_disciplina():
     print("\n--- Eliminar disciplina ---")
@@ -112,15 +114,13 @@ def borrar_disciplina():
         if conexion is not None:
             conexion.close()
 
-        presione_enter()
-
 
 def modificar_disciplina():
     """
     Primero muestra la lista de disciplinas para que el usuario pueda ver el ID.
     Luego pide los nuevos datos y ejecuta un UPDATE.
     """
-    print("\n--- Actulizar disciplina ---")
+    print("\n--- Modificar disciplina ---")
 
     listar_disciplinas()
 
@@ -138,7 +138,7 @@ def modificar_disciplina():
 
         sql = """
             UPDATE disciplinas
-            SET nombre = %s,
+            SET nombre = %s
             WHERE id_disciplina = %s;
         """
 
@@ -165,7 +165,7 @@ def modificar_disciplina():
             cursor.close()
         if conexion is not None:
             conexion.close()
-        presione_enter()
+
 
 def listar_disciplinas():
     print("\n--- Listado de disciplinas ---")
@@ -202,4 +202,3 @@ def listar_disciplinas():
             cursor.close()
         if conexion is not None:
             conexion.close()
-        presione_enter()

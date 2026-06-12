@@ -20,14 +20,19 @@ def menu_actividades():
 
         if opcion == "1":
             alta_actividad()
+            presione_enter()
         elif opcion == "2":
             listar_actividades()
+            presione_enter()
         elif opcion == "3":
             modificar_actividad()
+            presione_enter()
         elif opcion == "4":
             eliminar_actividad()
+            presione_enter()
         elif opcion == "5":
             cambiar_estado_actividad()
+            presione_enter()
         elif opcion == "0":
             print("Saliendo...")
             break
@@ -121,8 +126,6 @@ def alta_actividad():
         if conexion is not None:
             conexion.close()
 
-        presione_enter()
-
 
 def listar_actividades():
 
@@ -175,9 +178,6 @@ def listar_actividades():
         if conexion is not None:
             conexion.close()
 
-        presione_enter()
-
-
 
 def modificar_actividad():
 
@@ -187,101 +187,354 @@ def modificar_actividad():
 
     id_actividad = pedir_entero("\nIngrese el ID de la actividad a modificar: ")
 
-    print("\nIngrese los nuevos datos de la actividad:")
+    while True:
+        print("\n--- Ingrese el dato que quiere modificar ---")
+        print("1. Nombre")
+        print("2. Disciplina")
+        print("3. Espacio deportivo")
+        print("4. Cupo máximo")
+        print("5. Día de la semana")
+        print("6. Fecha")
+        print("7. Horario")
+        print("8. Estado")
+        print("0. Volver al menú de actividades")
 
-    nombre = pedir_texto_obligatorio("Nuevo nombre: ")
+        opcion = input("Seleccione una opción: ")
 
-    print("\nSeleccione la nueva disciplina:")
-    listar_disciplinas()
-    id_disciplina = pedir_entero("Nuevo ID de disciplina: ")
+        if opcion == "1":
+            modificar_nombre_actividad(id_actividad)
+        elif opcion == "2":
+            modificar_disciplina_actividad(id_actividad)
+        elif opcion == "3":
+            modificar_espacio_actividad(id_actividad)
+        elif opcion == "4":
+            modificar_cupo_actividad(id_actividad)
+        elif opcion == "5":
+            modificar_dia_actividad(id_actividad)
+        elif opcion == "6":
+            modificar_fecha_actividad(id_actividad)
+        elif opcion == "7":
+            modificar_horario_actividad(id_actividad)
+        elif opcion == "8":
+            modificar_estado_actividad(id_actividad)
+        elif opcion == "0":
+            print("Volviendo al menú de actividades...")
+            break
+        else:
+            print("Opción inválida. Intente nuevamente.")
 
-    print("\nSeleccione el nuevo espacio deportivo:")
-    listar_espacios()
-    id_espacio = pedir_entero("Nuevo ID de espacio deportivo: ")
+def modificar_nombre_actividad(id_actividad):
 
-    cupo_max = pedir_entero_positivo("Nuevo cupo máximo: ")
+        nombre = pedir_texto_obligatorio("Nuevo nombre: ")
 
-    dias_validos = [
-        "lunes",
-        "martes",
-        "miercoles",
-        "jueves",
-        "viernes",
-        "sabado",
-        "domingo"
-    ]
+        conexion = None
+        cursor = None
 
-    dia_semana = pedir_opcion_valida(
-        "Nuevo día de la semana: ",
-        dias_validos
-    )
+        try:
+            conexion = get_connection()
+            cursor = conexion.cursor()
 
-    fecha = pedir_texto_obligatorio("Nueva fecha (AAAA-MM-DD): ")
-    horario = pedir_texto_obligatorio("Nuevo horario (HH:MM:SS): ")
+            sql = """
+                UPDATE actividadesDeportivas
+                SET nombre = %s
+                WHERE id_actividad = %s;
+            """
 
-    estados_validos = [
-        "abierta",
-        "cerrada",
-        "finalizada",
-        "cancelada"
-    ]
+            cursor.execute(sql, (nombre, id_actividad))
+            conexion.commit()
 
-    estado = pedir_opcion_valida(
-        "Nuevo estado (abierta/cerrada/finalizada/cancelada): ",
-        estados_validos
-    )
+            if cursor.rowcount > 0:
+                print("Nombre de actividad modificado correctamente.")
+            else:
+                print("No se encontró una actividad con ese ID.")
 
-    conexion = None
-    cursor = None
+        except Exception as e:
+            print("Error al modificar el nombre de la actividad:")
+            print(e)
 
-    try:
-        conexion = get_connection()
-        cursor = conexion.cursor()
+        finally:
+            if cursor is not None:
+                cursor.close()
+            if conexion is not None:
+                conexion.close()
 
-        sql = """
-            UPDATE actividadesDeportivas
-            SET nombre = %s,
-                id_disciplina = %s,
-                id_espacio = %s,
-                cupo_max = %s,
-                dia_semana = %s,
-                fecha = %s,
-                horario = %s,
-                estado = %s
-            WHERE id_actividad = %s;
-        """
+def modificar_disciplina_actividad(id_actividad):
 
-        valores = (
-            nombre,
-            id_disciplina,
-            id_espacio,
-            cupo_max,
-            dia_semana,
-            fecha,
-            horario,
-            estado,
-            id_actividad
+        print("\nSeleccione la nueva disciplina:")
+        listar_disciplinas()
+
+        id_disciplina = pedir_entero("Nuevo ID de disciplina: ")
+
+        conexion = None
+        cursor = None
+
+        try:
+            conexion = get_connection()
+            cursor = conexion.cursor()
+
+            sql = """
+                UPDATE actividadesDeportivas
+                SET id_disciplina = %s
+                WHERE id_actividad = %s;
+            """
+
+            cursor.execute(sql, (id_disciplina, id_actividad))
+            conexion.commit()
+
+            if cursor.rowcount > 0:
+                print("Disciplina de la actividad modificada correctamente.")
+            else:
+                print("No se encontró una actividad con ese ID.")
+
+        except Exception as e:
+            print("Error al modificar la disciplina de la actividad:")
+            print(e)
+            print("Puede ser que no exista una disciplina con ese ID.")
+
+        finally:
+            if cursor is not None:
+                cursor.close()
+            if conexion is not None:
+                conexion.close()
+
+def modificar_espacio_actividad(id_actividad):
+
+        print("\nSeleccione el nuevo espacio deportivo:")
+        listar_espacios()
+
+        id_espacio = pedir_entero("Nuevo ID de espacio deportivo: ")
+
+        conexion = None
+        cursor = None
+
+        try:
+            conexion = get_connection()
+            cursor = conexion.cursor()
+
+            sql = """
+                UPDATE actividadesDeportivas
+                SET id_espacio = %s
+                WHERE id_actividad = %s;
+            """
+
+            cursor.execute(sql, (id_espacio, id_actividad))
+            conexion.commit()
+
+            if cursor.rowcount > 0:
+                print("Espacio de la actividad modificado correctamente.")
+            else:
+                print("No se encontró una actividad con ese ID.")
+
+        except Exception as e:
+            print("Error al modificar el espacio de la actividad:")
+            print(e)
+            print("Puede ser que no exista un espacio con ese ID.")
+
+        finally:
+            if cursor is not None:
+                cursor.close()
+            if conexion is not None:
+                conexion.close()
+
+def modificar_cupo_actividad(id_actividad):
+
+        cupo_max = pedir_entero_positivo("Nuevo cupo máximo: ")
+
+        conexion = None
+        cursor = None
+
+        try:
+            conexion = get_connection()
+            cursor = conexion.cursor()
+
+            sql = """
+                UPDATE actividadesDeportivas
+                SET cupo_max = %s
+                WHERE id_actividad = %s;
+            """
+
+            cursor.execute(sql, (cupo_max, id_actividad))
+            conexion.commit()
+
+            if cursor.rowcount > 0:
+                print("Cupo máximo modificado correctamente.")
+            else:
+                print("No se encontró una actividad con ese ID.")
+
+        except Exception as e:
+            print("Error al modificar el cupo máximo:")
+            print(e)
+
+        finally:
+            if cursor is not None:
+                cursor.close()
+            if conexion is not None:
+                conexion.close()
+
+def modificar_dia_actividad(id_actividad):
+
+        dias_validos = [
+            "lunes",
+            "martes",
+            "miercoles",
+            "jueves",
+            "viernes",
+            "sabado",
+            "domingo"
+        ]
+
+        dia_semana = pedir_opcion_valida(
+            "Nuevo día de la semana (lunes, martes, miercoles, jueves, viernes, sabado, domingo): ",
+            dias_validos
         )
 
-        cursor.execute(sql, valores)
-        conexion.commit()
+        conexion = None
+        cursor = None
 
-        if cursor.rowcount > 0:
-            print("Actividad deportiva modificada correctamente.")
-        else:
-            print("No se encontró una actividad con ese ID.")
+        try:
+            conexion = get_connection()
+            cursor = conexion.cursor()
 
-    except Exception as e:
-        print("Error al modificar la actividad deportiva.")
-        print(e)
+            sql = """
+                UPDATE actividadesDeportivas
+                SET dia_semana = %s
+                WHERE id_actividad = %s;
+            """
 
-    finally:
-        if cursor is not None:
-            cursor.close()
-        if conexion is not None:
-            conexion.close()
+            cursor.execute(sql, (dia_semana, id_actividad))
+            conexion.commit()
 
-        presione_enter()
+            if cursor.rowcount > 0:
+                print("Día de la actividad modificado correctamente.")
+            else:
+                print("No se encontró una actividad con ese ID.")
+
+        except Exception as e:
+            print("Error al modificar el día de la actividad:")
+            print(e)
+
+        finally:
+            if cursor is not None:
+                cursor.close()
+            if conexion is not None:
+                conexion.close()
+
+def modificar_fecha_actividad(id_actividad):
+
+        fecha = pedir_texto_obligatorio("Nueva fecha (AAAA-MM-DD): ")
+
+        conexion = None
+        cursor = None
+
+        try:
+            conexion = get_connection()
+            cursor = conexion.cursor()
+
+            sql = """
+                UPDATE actividadesDeportivas
+                SET fecha = %s
+                WHERE id_actividad = %s;
+            """
+
+            cursor.execute(sql, (fecha, id_actividad))
+            conexion.commit()
+
+            if cursor.rowcount > 0:
+                print("Fecha de la actividad modificada correctamente.")
+            else:
+                print("No se encontró una actividad con ese ID.")
+
+        except Exception as e:
+            print("Error al modificar la fecha de la actividad:")
+            print(e)
+            print("Revise que la fecha tenga formato AAAA-MM-DD.")
+
+        finally:
+            if cursor is not None:
+                cursor.close()
+            if conexion is not None:
+                conexion.close()
+
+def modificar_horario_actividad(id_actividad):
+
+        horario = pedir_texto_obligatorio("Nuevo horario (HH:MM:SS): ")
+
+        conexion = None
+        cursor = None
+
+        try:
+            conexion = get_connection()
+            cursor = conexion.cursor()
+
+            sql = """
+                UPDATE actividadesDeportivas
+                SET horario = %s
+                WHERE id_actividad = %s;
+            """
+
+            cursor.execute(sql, (horario, id_actividad))
+            conexion.commit()
+
+            if cursor.rowcount > 0:
+                print("Horario de la actividad modificado correctamente.")
+            else:
+                print("No se encontró una actividad con ese ID.")
+
+        except Exception as e:
+            print("Error al modificar el horario de la actividad:")
+            print(e)
+            print("Revise que el horario tenga formato HH:MM:SS.")
+
+        finally:
+            if cursor is not None:
+                cursor.close()
+            if conexion is not None:
+                conexion.close()
+
+def modificar_estado_actividad(id_actividad):
+
+        estados_validos = [
+            "abierta",
+            "cerrada",
+            "finalizada",
+            "cancelada"
+        ]
+
+        estado = pedir_opcion_valida(
+            "Nuevo estado (abierta/cerrada/finalizada/cancelada): ",
+            estados_validos
+        )
+
+        conexion = None
+        cursor = None
+
+        try:
+            conexion = get_connection()
+            cursor = conexion.cursor()
+
+            sql = """
+                UPDATE actividadesDeportivas
+                SET estado = %s
+                WHERE id_actividad = %s;
+            """
+
+            cursor.execute(sql, (estado, id_actividad))
+            conexion.commit()
+
+            if cursor.rowcount > 0:
+                print("Estado de la actividad modificado correctamente.")
+            else:
+                print("No se encontró una actividad con ese ID.")
+
+        except Exception as e:
+            print("Error al modificar el estado de la actividad:")
+            print(e)
+
+        finally:
+            if cursor is not None:
+                cursor.close()
+            if conexion is not None:
+                conexion.close()
 
 
 def eliminar_actividad():
@@ -330,7 +583,6 @@ def eliminar_actividad():
         if conexion is not None:
             conexion.close()
 
-        presione_enter()
 
 def cambiar_estado_actividad():
 
@@ -382,5 +634,3 @@ def cambiar_estado_actividad():
             cursor.close()
         if conexion is not None:
             conexion.close()
-
-        presione_enter()
