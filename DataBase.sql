@@ -20,6 +20,26 @@ CREATE TABLE carreras
     FOREIGN KEY (id_facultad) REFERENCES facultades(id_facultad),
     UNIQUE (nombre, id_facultad)
 );
+CREATE TABLE usuarios
+(
+    docuemento INT NOT NULL UNIQUE,
+    nombre_usuario VARCHAR(50) NOT NULL UNIQUE,
+    contrasena VARCHAR(255) NOT NULL,
+    rol ENUM('admin','docente','estudiante') NOT NULL,
+
+    PRIMARY KEY (docuemento)
+);
+
+CREATE TABLE docentes
+(
+    documento INT NOT NULL UNIQUE,
+    nombre VARCHAR(100) NOT NULL,
+    apellido VARCHAR(100) NOT NULL,
+    email VARCHAR(100),
+
+    PRIMARY KEY (documento),
+    FOREIGN KEY (documento) REFERENCES usuarios(docuemento)
+);
 
 CREATE TABLE estudiantes
 (
@@ -30,6 +50,7 @@ CREATE TABLE estudiantes
     id_carrera    INT NOT NULL,
 
     PRIMARY KEY (documento),
+    FOREIGN KEY (documento) REFERENCES usuarios(docuemento),
     FOREIGN KEY (id_carrera) REFERENCES carreras(id_carrera)
 );
 
@@ -96,4 +117,5 @@ CREATE TABLE asistencias
     FOREIGN KEY (id_inscripcion) REFERENCES inscripciones(id_inscripcion),
     UNIQUE (id_inscripcion, fecha)
 );
+
 
