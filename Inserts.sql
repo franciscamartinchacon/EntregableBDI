@@ -40,13 +40,13 @@ INSERT INTO disciplinas (nombre) VALUES
 ('Gimnasio');
 
 -- Espacios deportivos
-INSERT INTO espaciosDeportivos (nombre, ubicacion) VALUES
-('Gimnasio Mullin Tech', 'Edificio Mullin Tech'),
-('Sala multiuso Sacré Cœur', 'Edificio Sacré Cœur'),
-('Patio deportivo San José', 'Edificio San José'),
-('Sala de actividades Lourdes', 'Edificio Lourdes'),
-('Espacio recreativo Semprún', 'Edificio Semprún'),
-('Sala funcional San Ignacio', 'Edificio San Ignacio');
+INSERT INTO espaciosDeportivos (nombre, ubicacion, libre) VALUES
+('Gimnasio Mullin Tech', 'Edificio Mullin Tech', FALSE),
+('Sala multiuso Sacré Cœur', 'Edificio Sacré Cœur', FALSE ),
+('Patio deportivo San José', 'Edificio San José', TRUE),
+('Sala de actividades Lourdes', 'Edificio Lourdes', TRUE),
+('Espacio recreativo Semprún', 'Edificio Semprún', FALSE),
+('Sala funcional San Ignacio', 'Edificio San Ignacio', FALSE);
 
 -- Actividades deportivas
 INSERT INTO actividadesDeportivas
