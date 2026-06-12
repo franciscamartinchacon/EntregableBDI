@@ -33,6 +33,21 @@ def menu_reportes():
             Limit 3; 
             """
 
+            cursor.execute(query)
+            consultas = cursor.fetchall()
+
+            if len(consultas) == 0:
+                print("No hay estudiantes inscriptos en actividades.")
+            else:
+                print("Actividades con mayor cantidad de inscriptos confirmados.")
+                for consulta in consultas:
+                    print(
+                        f"ID Activdad: {consulta[0]} | "
+                        f"Nombre: {consulta[1]} | "
+                        f"Cantidad de inscripciones: {consulta[2]} | "
+                    )
+
+
         elif opcion == "2":
             query = """
             SELECT a.id_actividad, a.nombre, a.estado, (SELECT a.cupo_max - COUNT(*) FROM inscripciones i WHERE i.id_actividad_deportiva = a.id_actividad AND i.estado = 'confirmada') as cant_cupos_disponibles  -- subconslta
@@ -40,6 +55,22 @@ def menu_reportes():
             WHERE a.cupo_max > (SELECT COUNT(*) FROM inscripciones i WHERE i.id_actividad_deportiva = a.id_actividad AND i.estado = 'confirmada')
             ORDER BY cant_cupos_disponibles DESC;
             """
+
+            cursor.execute(query)
+            consultas = cursor.fetchall()
+
+            if len(consultas) == 0:
+                print("No hay activdades con cupos disponibles.")
+            else:
+                print("Actividades con cupos disponibles.")
+                for consulta in consultas:
+                    print(
+                        f"ID Activdad: {consulta[0]} | "
+                        f"Nombre: {consulta[1]} | "
+                        f"Estado: {consulta[2]} | "
+                        f"Cupos disponibles: {consulta[3]}"
+                    )
+
         elif opcion == "3":
             query = """
             SELECT COUNT(I.id_inscripcion) as cant_inscriptos, d.nombre
@@ -49,8 +80,23 @@ def menu_reportes():
             GROUP BY d.nombre
             ORDER BY cant_inscriptos DESC;
             """
+
+            cursor.execute(query)
+            consultas = cursor.fetchall()
+
+            if len(consultas) == 0:
+                print("No hay estudiantes inscriptos.")
+            else:
+                print("Cantidad de inscriptos por disciplina deportiva.")
+                for consulta in consultas:
+                    print(
+                        f"Cantidad de inscriptos: {consulta[0]} | "
+                        f"Nombre: {consulta[1]} | "
+                    )
+
         elif opcion == "4":
             consulta4()
+
         elif opcion == "5":
             query = """
             SELECT a.id_actividad, a.nombre, a.cupo_max, COUNT(i.id_inscripcion) AS confirmados, ROUND((COUNT(i.id_inscripcion) / a.cupo_max) * 100, 2) AS porcentaje_ocupacion
@@ -60,6 +106,24 @@ def menu_reportes():
             GROUP BY a.id_actividad, a.nombre, a.cupo_max
             ORDER BY porcentaje_ocupacion DESC;
             """
+
+            cursor.execute(query)
+            consultas = cursor.fetchall()
+
+            if len(consultas) == 0:
+                print("No hay registros para realizar el cálculo.")
+            else:
+                print("Porcentaje de ocupación de cada actividad.")
+
+                for consulta in consultas:
+                    print(
+                        f"ID Actividad: {consulta[0]} | "
+                        f"Nombre: {consulta[1]} | "
+                        f"Cupo máx.: {consulta[2]}"
+                        f"Confirmados: {consulta[3]}"
+                        f"Porcentaje ocupación: {consulta[4]}"
+                    )
+
         elif opcion == "6":
             query = """
             SELECT a.nombre, ROUND(AVG(asis.presente) * 100, 2) AS porcentaje
@@ -69,27 +133,72 @@ def menu_reportes():
             GROUP BY a.nombre
             ORDER BY porcentaje DESC;
             """
+            cursor.execute(query)
+            consultas = cursor.fetchall()
+
+            if len(consultas) == 0:
+                print("No hay registros para realizar el cálculo.")
+            else:
+                print("Porcentaje de asistencia por actividad.")
+                for consulta in consultas:
+                    print(
+                        f"Nombre: {consulta[0]} | "
+                        f"Porcentaje: {consulta[1]} | "
+                    )
+
 
         elif opcion == "7":
             query = """
-            SELECT e.id_estudiante, e.documento, e.nombre, e.apellido, COUNT(asis.id_asistencia) AS cantidad_inasistencias
+            SELECT e.documento, e.nombre, e.apellido, COUNT(asis.id_asistencia) AS cantidad_inasistencias
             FROM estudiantes e
-            JOIN inscripciones i on e.id_estudiante = i.id_estudiante
+            JOIN inscripciones i on e.documento = i.documento
             JOIN asistencias asis on i.id_inscripcion = asis.id_inscripcion
             WHERE asis.presente = FALSE
-            GROUP BY e.id_estudiante, e.documento, e.nombre, e.apellido
+            GROUP BY e.documento, e.nombre, e.apellido
             HAVING cantidad_inasistencias >= 3
             ORDER BY cantidad_inasistencias DESC;
             """
+
+            cursor.execute(query)
+            consultas = cursor.fetchall()
+
+            if len(consultas) == 0:
+                print("No hay inscripciones para realizar el cálculo.")
+            else:
+                print("Estudiantes con tres o más inasistencias registradas.")
+                for consulta in consultas:
+                    print(
+                        f"Docuemento {consulta[0]} | "
+                        f"Nombre: {consulta[1]} | "
+                        f"Apellido: {consulta[2]}"
+                        f"Cantidad de inasistencias: {consulta[3]}"
+                    )
+
         elif opcion == "8":
             query = """
             SELECT a.nombre AS actividad, e.nombre, e.apellido, e.documento, i.fecha_inscripcion
             FROM inscripciones i
-            JOIN estudiantes e ON i.id_estudiante = e.id_estudiante
+            JOIN estudiantes e ON i.documento = e.documento
             JOIN actividadesDeportivas a ON i.id_actividad_deportiva = a.id_actividad
             WHERE i.estado = 'lista_espera'
             ORDER BY a.nombre, i.fecha_inscripcion;
             """
+            cursor.execute(query)
+            consultas = cursor.fetchall()
+
+            if len(consultas) == 0:
+                print("No hay estudiantes registrados.")
+            else:
+                print("Estudiantes en lista de espera por actividad..")
+                for consulta in consultas:
+                    print(
+                        f"Actividad: {consulta[0]} | "
+                        f"Nombre: {consulta[1]} | "
+                        f"Apellido: {consulta[2]}"
+                        f"Docuemnto: {consulta[3]}"
+                        f"Fecha de inscripcion: {consulta[4]}"
+                    )
+
         elif opcion == "9":
             query = """
             SELECT a.id_actividad, a.nombre AS actividad, ROUND(AVG(asis.presente) * 100, 2) AS porcentaje_asistencia
@@ -111,6 +220,22 @@ def menu_reportes():
             )
             ORDER BY porcentaje_asistencia DESC;
             """
+            #
+            cursor.execute(query)
+            consultas = cursor.fetchall()
+
+            if len(consultas) == 0:
+                print("No hay estudiantes registrados.")
+            else:
+                print("Actividades con mayor porcentaje de asistencia que el promedio.")
+                for consulta in consultas:
+                    print(
+                        f"ID Actividad: {consulta[0]} | "
+                        f"Actividad: {consulta[1]} | "
+                        f"Porcentaje Asistencia: {consulta[2]}"
+                    )
+
+
         elif opcion == "10":
             query = """
             SELECT a.id_actividad, a.nombre AS actividad, d.nombre AS disciplina, a.fecha, a.horario, a.estado
@@ -120,15 +245,29 @@ def menu_reportes():
             WHERE i.id_inscripcion IS NULL
             ORDER BY a.fecha, a.horario;
             """
+            cursor.execute(query)
+            consultas = cursor.fetchall()
+
+            if len(consultas) == 0:
+                print("No hay estudiantes registrados.")
+            else:
+                print("Actividades que existen pero no tienen estudiantes confirmados")
+                for consulta in consultas:
+                    print(
+                        f"ID Actividad: {consulta[0]} | "
+                        f"Actividad: {consulta[1]} | "
+                        f"Disciplina: {consulta[2]}"
+                        f"Fecha: {consulta[3]}" 
+                        f"Horario: {consulta[4]}"
+                        f"Estado: {consulta[5]}"
+                    )
+
         elif opcion == "0":
             print("Saliendo...")
             break
         else:
             print("Opción inválida. Intente nuevamente.")
 
-        cursor.execute(query)
-        for el in cursor:
-            print(el)
 
         if cursor is not None:
             cursor.close()
@@ -154,22 +293,47 @@ def consulta4():
             query = """
             SELECT COUNT(*) cant_inscriptos, c.nombre
             FROM inscripciones i
-            JOIN estudiantes e on i.id_estudiante = e.id_estudiante
+            JOIN estudiantes e on i.documento = e.documento
             JOIN carreras c on e.id_carrera = c.id_carrera
             WHERE i.estado = 'confirmada'
             GROUP BY c.nombre;
             """
+            cursor.execute(query)
+            consultas = cursor.fetchall()
+
+            if len(consultas) == 0:
+                print("No hay estudiantes registrados.")
+            else:
+                print("Cantidad de inscriptos por carrera.")
+                for consulta in consultas:
+                    print(
+                        f"Cantida de Inscriptos: {consulta[0]} | "
+                        f"Carrera: {consulta[1]} | "
+                    )
+
 
         elif opcion == "2":
             query = """
             SELECT COUNT(*) cant_inscriptos, f.nombre
             FROM inscripciones i
-            JOIN estudiantes e on i.id_estudiante = e.id_estudiante
+            JOIN estudiantes e on i.documento = e.documento
             JOIN carreras c on e.id_carrera = c.id_carrera
             JOIN facultades f on c.id_facultad = f.id_facultad
             WHERE i.estado = 'confirmada'
             GROUP BY f.nombre;
             """
+            cursor.execute(query)
+            consultas = cursor.fetchall()
+
+            if len(consultas) == 0:
+                print("No hay estudiantes registrados.")
+            else:
+                print("Cantidad de inscriptos por facultad.")
+                for consulta in consultas:
+                    print(
+                        f"Cantida de Inscriptos: {consulta[0]} | "
+                        f"Facultad: {consulta[1]} | "
+                    )
 
         elif opcion == "0":
             menu_reportes()
