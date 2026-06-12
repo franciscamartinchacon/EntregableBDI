@@ -23,14 +23,14 @@ CREATE TABLE carreras
 
 CREATE TABLE estudiantes
 (
-    id_estudiante int auto_increment,
+    id_estudiante INT AUTO_INCREMENT ,
     documento   INT NOT NULL UNIQUE, #unico por cada estudiante
     nombre      VARCHAR(50) NOT NULL,
     apellido    VARCHAR(50) NOT NULL,
     correo      VARCHAR(50) NOT NULL UNIQUE, #unico por cada estudiante
     id_carrera    INT NOT NULL,
 
-    PRIMARY KEY (id_estudiante),
+    PRIMARY KEY (documento),
     FOREIGN KEY (id_carrera) REFERENCES carreras(id_carrera)
 );
 
@@ -74,15 +74,13 @@ CREATE TABLE actividadesDeportivas
 CREATE TABLE inscripciones
 (
     id_inscripcion          INT AUTO_INCREMENT,
-    id_estudiante           INT, #evaluar unique
+    id_estudiante           INT,
     id_actividad_deportiva  INT,
-    fecha_inscripcion        DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    fecha_inscripcion       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     estado                  ENUM ('confirmada','lista_espera'),
-    PRIMARY KEY (id_inscripcion),
+    PRIMARY KEY (id_estudiante, id_actividad_deportiva,fecha_inscripcion), #controla que un mismo alumno solo se pueda anotar a una misma actividad por dia
     FOREIGN KEY (id_estudiante) REFERENCES estudiantes(id_estudiante),
     FOREIGN KEY (id_actividad_deportiva) REFERENCES actividadesDeportivas(id_actividad),
-
-    UNIQUE (id_estudiante, id_actividad_deportiva)  #ver consigna
 );
 
 CREATE TABLE asistencias
