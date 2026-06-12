@@ -1,5 +1,3 @@
-from datetime import datetime
-from time import strptime
 from conexionSQL import get_connection
 from validacion_datos import pedir_texto_obligatorio, pedir_entero, pedir_entero_positivo, pedir_opcion_valida, presione_enter
 from disciplinas import listar_disciplinas
@@ -67,11 +65,11 @@ def alta_actividad():
     ]
 
     dia_semana = pedir_opcion_valida(
-        "Día de la semana (lunes, martes, miercoles, jueves, domingo): ",
+        "Día de la semana (lunes, martes, miercoles, jueves, viernes, sabado, domingo): ",
         dias_validos
     )
 
-    fecha = strptime(pedir_texto_obligatorio("Fecha (AAAA-MM-DD): "))
+    fecha = pedir_texto_obligatorio("Fecha (AAAA-MM-DD): ")
     hora_inicio = pedir_texto_obligatorio("Hora de inicio (HH:MM:SS): ")
     hora_fin = pedir_texto_obligatorio("Hora de fin (HH:MM:SS): ")
 
@@ -141,11 +139,22 @@ def listar_actividades():
         cursor = conexion.cursor()
 
         sql = """
-            SELECT a.id_actividad, a.nombre, d.nombre AS disciplina, e.nombre AS espacio, e.ubicacion, a.cupo_max, a.dia_semana, a.fecha, a.hora_inicio, a.hora_fin, a.estado
+            SELECT 
+                a.id_actividad, 
+                a.nombre, 
+                d.nombre AS disciplina, 
+                e.nombre AS espacio, 
+                e.ubicacion, 
+                a.cupo_max, 
+                a.dia_semana, 
+                a.fecha, 
+                a.hora_inicio, 
+                a.hora_fin, 
+                a.estado
             FROM actividadesDeportivas a
             JOIN disciplinas d ON a.id_disciplina = d.id_disciplina
             JOIN espaciosDeportivos e ON a.id_espacio = e.id_espacio
-            ORDER BY a.fecha, a.horario;
+            ORDER BY a.fecha, a.hora_inicio;
         """
 
         cursor.execute(sql)
@@ -197,8 +206,7 @@ def modificar_actividad():
         print("5. Día de la semana")
         print("6. Fecha")
         print("7. Hora inicio")
-        print("8. Hora fin")
-        print("9. Estado")
+        print("8. Estado")
         print("0. Volver al menú de actividades")
 
         opcion = input("Seleccione una opción: ")

@@ -3,15 +3,14 @@ from validacion_datos import pedir_texto_obligatorio
 from validacion_datos import pedir_entero
 from validacion_datos import pedir_bool, presione_enter
 
-#Depliega otro menu [agregar, borrar, modificar, disciplinas]
 
 def menu_espacios():
     while True:
         print("\n--- ABM espacios deportivos ---")
-        print("1. Alta espacio deportivo") #Agregar disciplina
+        print("1. Alta de espacio deportivo") #Agregar disciplina
         print("2. Borrar espacio deportivo")
         print("3. Modificar espacio deportivo")
-        print("4. Listar espacios deportivo")
+        print("4. Listar espacios deportivos")
         print("0. Salir")
 
         opcion = input("Seleccione una opción: ")
@@ -35,7 +34,6 @@ def menu_espacios():
             print("Opción no válida")
 
 
-
 def alta_espacio():
     print("\n--- Alta de espacios deportivos ---")
 
@@ -51,10 +49,10 @@ def alta_espacio():
         cursor = conexion.cursor()
 
         sql = """
-               INSERT INTO disciplinas 
-               (nombre, ubicacion, libre)
-               VALUES (%s,%s,%s);
-           """
+            INSERT INTO espaciosDeportivos
+            (nombre, ubicacion, libre)
+            VALUES (%s, %s, %s);
+        """
 
         valores = (nombre,ubicacion, libre)
 
@@ -84,7 +82,7 @@ def borrar_espacio():
 
     confirmacion = input("¿Seguro que desea eliminar este espacio? (si/no): ").lower()
 
-    if confirmacion != "s":
+    if confirmacion != "si":
         print("Operación cancelada.")
         return
 
@@ -264,8 +262,7 @@ def listar_espacios():
         cursor = conexion.cursor()
 
         sql = """
-                SELECT 
-                    e.id_espacio, e.nombre, e.ubicacion, e.libre
+                SELECT e.id_espacio, e.nombre, e.ubicacion, e.libre
                 FROM espaciosDeportivos e
                 ORDER BY e.id_espacio, e.nombre;
             """
@@ -277,7 +274,13 @@ def listar_espacios():
             print("No hay espacios deportivos cargados")
         else:
             for espacio in espacios:
-                print(f"ID: {espacio[0]} | Nombre: {espacio[1]} | Ubicacion: {espacio[2]} | Libre: {espacio[3]}")
+                if espacio[3] == 1:
+                    estado_libre = "Sí"
+                else:
+                    estado_libre = "No"
+
+                print(f"ID: {espacio[0]} | "f"Nombre: {espacio[1]} | "f"Ubicación: {espacio[2]} | "f"Libre: {estado_libre}")
+
 
     except Exception as e:
         print("Error al listar espacios deportivos:")
