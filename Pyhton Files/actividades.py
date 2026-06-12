@@ -1,7 +1,7 @@
 from datetime import datetime
 from time import strptime
 from conexionSQL import get_connection
-from validacion_datos import pedir_texto_obligatorio, pedir_entero, pedir_entero_positivo, pedir_opcion_valida
+from validacion_datos import pedir_texto_obligatorio, pedir_entero, pedir_entero_positivo, pedir_opcion_valida, presione_enter
 from disciplinas import listar_disciplinas
 from espacios import listar_espacios
 
@@ -121,6 +121,9 @@ def alta_actividad():
         if conexion is not None:
             conexion.close()
 
+        presione_enter()
+
+
 def listar_actividades():
 
     print("\n--- Listado de actividades deportivas ---")
@@ -171,6 +174,10 @@ def listar_actividades():
             cursor.close()
         if conexion is not None:
             conexion.close()
+
+        presione_enter()
+
+
 
 def modificar_actividad():
 
@@ -274,6 +281,9 @@ def modificar_actividad():
         if conexion is not None:
             conexion.close()
 
+        presione_enter()
+
+
 def eliminar_actividad():
 
     print("\n--- Eliminar actividad deportiva ---")
@@ -319,6 +329,8 @@ def eliminar_actividad():
             cursor.close()
         if conexion is not None:
             conexion.close()
+
+        presione_enter()
 
 def cambiar_estado_actividad():
 
@@ -370,3 +382,5 @@ def cambiar_estado_actividad():
             cursor.close()
         if conexion is not None:
             conexion.close()
+
+        presione_enter()

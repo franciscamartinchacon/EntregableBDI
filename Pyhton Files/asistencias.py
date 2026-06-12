@@ -1,6 +1,6 @@
 from conexionSQL import get_connection
 from datetime import datetime
-from validacion_datos import pedir_entero, pedir_texto_obligatorio, pedir_opcion_valida
+from validacion_datos import pedir_entero, pedir_texto_obligatorio, pedir_opcion_valida,presione_enter
 
 def menu_asistencias():
 
@@ -70,6 +70,8 @@ def listar_inscripciones_confirmadas():
         if conexion is not None:
             conexion.close()
 
+        presione_enter()
+    
 
 def obtener_inscripcion_confirmada(id_inscripcion):
 
@@ -109,6 +111,8 @@ def obtener_inscripcion_confirmada(id_inscripcion):
             cursor.close()
         if conexion is not None:
             conexion.close()
+
+        presione_enter()
 
 
 def registrar_asistencia():
@@ -179,6 +183,9 @@ def registrar_asistencia():
             cursor.close()
         if conexion is not None:
             conexion.close()
+
+        presione_enter()
+
 def listar_asistencias():
 
     print("\n--- Listado de asistencias ---")
@@ -229,3 +236,5 @@ def listar_asistencias():
             cursor.close()
         if conexion is not None:
             conexion.close()
+
+        presione_enter()

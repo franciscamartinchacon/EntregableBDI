@@ -1,7 +1,7 @@
 from conexionSQL import get_connection
 from validacion_datos import pedir_texto_obligatorio
 from validacion_datos import pedir_entero
-from validacion_datos import pedir_bool
+from validacion_datos import pedir_bool, presione_enter
 
 #Depliega otro menu [agregar, borrar, modificar, disciplinas]
 
@@ -10,7 +10,7 @@ def menu_espacios():
         print("\n--- ABM disciplinas ---")
         print("1. Alta espacio deportivo") #Agregar disciplina
         print("2. Borrar espacio deportivo")
-        print("3. Actualizar espacio deportivo")
+        print("3. Modificar espacio deportivo")
         print("4. Listar espacios deportivo")
         print("0. Salir")
 
@@ -21,7 +21,7 @@ def menu_espacios():
         elif opcion == "2":
             borrar_espacio()
         elif opcion == "3":
-            actualizar_espacio()
+            modificar_espacio()
         elif opcion == "4":
             listar_espacios()
         elif opcion == "0":
@@ -37,7 +37,7 @@ def alta_espacio():
 
     nombre = pedir_texto_obligatorio("Nombre: ")
     ubicacion = pedir_texto_obligatorio("Ubicación: ")
-    libre = pedir_bool("Libre (s/n): ")
+    libre = pedir_bool("Libre (si/no): ")
 
     conexion = None
     cursor = None
@@ -69,6 +69,7 @@ def alta_espacio():
             cursor.close()
         if conexion is not None:
             conexion.close()
+        presione_enter()
 
 
 def borrar_espacio():
@@ -113,9 +114,10 @@ def borrar_espacio():
             cursor.close()
         if conexion is not None:
             conexion.close()
+        presione_enter()
 
 
-def actualizar_espacio():
+def modificar_espacio():
     """
     Primero muestra la lista de espacios para que el usuario pueda ver el ID.
     Luego pide los nuevos datos y ejecuta un UPDATE.
@@ -171,6 +173,7 @@ def actualizar_espacio():
             cursor.close()
         if conexion is not None:
             conexion.close()
+        presione_enter()
 
 def listar_espacios():
     print("\n--- Listado de espacios deportivos ---")
@@ -207,3 +210,4 @@ def listar_espacios():
             cursor.close()
         if conexion is not None:
             conexion.close()
+        presione_enter()
