@@ -1,9 +1,6 @@
 from conexionSQL import get_connection
 from validacion_datos import pedir_texto_obligatorio, pedir_entero, pedir_cedula, presione_enter
 
-
-# MENÚ DE ESTUDIANTES
-
 def menu_estudiantes():
     while True:
         print("\n--- ABM Estudiantes ---")
@@ -17,12 +14,16 @@ def menu_estudiantes():
 
         if opcion == "1":
             alta_estudiante()
+            presione_enter()
         elif opcion == "2":
             listar_estudiantes()
+            presione_enter()
         elif opcion == "3":
             modificar_estudiante()
+            presione_enter()
         elif opcion == "4":
             eliminar_estudiante()
+            presione_enter()
         elif opcion == "0":
             print("Saliendo...")
             break
@@ -74,7 +75,6 @@ def listar_carreras():
             cursor.close()
         if conexion is not None:
             conexion.close()
-        presione_enter()
 
 
 def alta_estudiante():
@@ -119,7 +119,6 @@ def alta_estudiante():
             cursor.close()
         if conexion is not None:
             conexion.close()
-        presione_enter()
 
 def listar_estudiantes():
 
@@ -134,7 +133,6 @@ def listar_estudiantes():
 
         sql = """
             SELECT 
-                e.id_estudiante,
                 e.documento,
                 e.nombre,
                 e.apellido,
@@ -146,7 +144,7 @@ def listar_estudiantes():
                 ON e.id_carrera = c.id_carrera
             JOIN facultades f 
                 ON c.id_facultad = f.id_facultad
-            ORDER BY e.id_estudiante, e.apellido, e.nombre;
+            ORDER BY e.documento, e.apellido, e.nombre;
         """
 
         cursor.execute(sql)
@@ -157,13 +155,12 @@ def listar_estudiantes():
         else:
             for estudiante in estudiantes:
                 print(
-                    f"ID: {estudiante[0]} | "
-                    f"Documento: {estudiante[1]} | "
-                    f"Nombre: {estudiante[2]} | "
-                    f"Apellido: {estudiante[3]} | "
-                    f"Correo: {estudiante[4]} | "
-                    f"Carrera: {estudiante[5]} | "
-                    f"Facultad: {estudiante[6]}"
+                    f"Documento: {estudiante[0]} | "
+                    f"Nombre: {estudiante[1]} | "
+                    f"Apellido: {estudiante[2]} | "
+                    f"Correo: {estudiante[3]} | "
+                    f"Carrera: {estudiante[4]} | "
+                    f"Facultad: {estudiante[5]}"
                 )
 
     except Exception as e:
@@ -175,7 +172,6 @@ def listar_estudiantes():
             cursor.close()
         if conexion is not None:
             conexion.close()
-        presione_enter()
 
 
 def modificar_estudiante():
@@ -184,7 +180,7 @@ def modificar_estudiante():
 
     listar_estudiantes()
 
-    documento = pedir_entero("\nIngrese el documento del estudiante a modificar: ")
+    documento = pedir_cedula("\nIngrese el documento del estudiante a modificar: ")
 
     while True:
         print("\n--- Ingrese el dato que quiere modificar ---")
@@ -247,7 +243,6 @@ def modificar_nombre(documento):
             cursor.close()
         if conexion is not None:
             conexion.close()
-        presione_enter()
 
 def modificar_apellido(documento):
     apellido = pedir_texto_obligatorio("Nuevo apellido: ")
@@ -282,7 +277,6 @@ def modificar_apellido(documento):
             cursor.close()
         if conexion is not None:
             conexion.close()
-        presione_enter()
 
 def modificar_correo(documento):
     correo = pedir_texto_obligatorio("Nuevo correo: ")
@@ -317,7 +311,6 @@ def modificar_correo(documento):
             cursor.close()
         if conexion is not None:
             conexion.close()
-        presione_enter()
 
 def modificar_carrera(documento):
     print("\n--- Carreras disponibles ---")
@@ -355,7 +348,6 @@ def modificar_carrera(documento):
             cursor.close()
         if conexion is not None:
             conexion.close()
-        presione_enter()
 
 
 def eliminar_estudiante():
@@ -363,7 +355,7 @@ def eliminar_estudiante():
 
     listar_estudiantes()
 
-    documento = pedir_entero("\nIngrese el documento del estudiante a eliminar: ")
+    documento = pedir_cedula("\nIngrese el documento del estudiante a eliminar: ")
 
     conexion = None
     cursor = None
@@ -453,4 +445,3 @@ def eliminar_estudiante():
             cursor.close()
         if conexion is not None:
             conexion.close()
-        presione_enter()
