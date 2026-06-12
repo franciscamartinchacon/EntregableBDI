@@ -5,6 +5,29 @@ from actividades import menu_actividades
 from inscripciones import gestion_inscripciones
 from asistencias import menu_asistencias
 from reportes import menu_reportes
+from usuario import login
+
+def inicio():
+    while True:
+        usuario = login()
+        if usuario is None:
+            print("Usuario o contraseña invalidos. Intnte nuevamente. ")
+            continue
+
+    documento = usuario[0]
+    rol = usuario[1]
+
+    print(f"\nHas iniciado seción {rol}")
+    if rol == "admin":
+        menu_admin()
+
+    elif rol == "docente":
+        menu_docente()
+
+    elif rol == "estudiante":
+        menu_estudiante()
+    return
+
 
 def menu():
     while True:
