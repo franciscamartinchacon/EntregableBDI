@@ -59,4 +59,14 @@ def pedir_bool(mensaje):
         else:
             print("Eror. Ingrese un valor válido.")
 
+def pedir_cedula(mensaje):
+    # Pide un número entero de 8 digitos mayor que cero.
+    while True:
+        numero = pedir_entero(mensaje)
+
+        if numero > 0 and len(str(numero))==8: #pasamos a str para contar digitos
+            return numero
+
+        print("Error: el número debe ser mayor que cero.")
+
 #normalizar datos???

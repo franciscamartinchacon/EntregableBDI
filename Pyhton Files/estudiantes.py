@@ -1,6 +1,5 @@
 from conexionSQL import get_connection
-from validacion_datos import pedir_texto_obligatorio
-from validacion_datos import pedir_entero
+from validacion_datos import pedir_texto_obligatorio, pedir_entero, pedir_cedula
 
 
 # MENÚ DE ESTUDIANTES
@@ -81,7 +80,7 @@ def alta_estudiante():
 
     print("\n--- Alta de estudiante ---")
 
-    documento = pedir_texto_obligatorio("Documento: ")
+    documento = pedir_cedula("Documento: ")
     nombre = pedir_texto_obligatorio("Nombre: ")
     apellido = pedir_texto_obligatorio("Apellido: ")
     correo = pedir_texto_obligatorio("Correo electrónico: ")
