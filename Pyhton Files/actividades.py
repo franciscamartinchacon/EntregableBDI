@@ -1,3 +1,5 @@
+from datetime import datetime
+from time import strptime
 from conexionSQL import get_connection
 from validacion_datos import pedir_texto_obligatorio, pedir_entero, pedir_entero_positivo, pedir_opcion_valida
 from disciplinas import listar_disciplinas
@@ -60,12 +62,12 @@ def alta_actividad():
     ]
 
     dia_semana = pedir_opcion_valida(
-        "Día de la semana: ",
+        "Día de la semana (lunes, martes, miercoles, jueves, domingo): ",
         dias_validos
     )
 
-    fecha = pedir_texto_obligatorio("Fecha (AAAA-MM-DD): ")
-    horario = pedir_texto_obligatorio("Horario (HH:MM:SS): ")
+    fecha = strptime(pedir_texto_obligatorio("Fecha (AAAA-MM-DD): "))
+    horario = datetime.strptime(pedir_texto_obligatorio("Horario (HH:MM): "))
 
     estados_validos = [
         "abierta",
@@ -280,7 +282,7 @@ def eliminar_actividad():
 
     id_actividad = pedir_entero("\nIngrese el ID de la actividad a eliminar: ")
 
-    confirmacion = input("¿Seguro que desea eliminar esta actividad? (s/n): ").strip().lower()
+    confirmacion = input("¿Seguro que desea eliminar esta actividad? (si/no): ").strip().lower()
 
     if confirmacion != "s":
         print("Operación cancelada.")

@@ -59,7 +59,7 @@ CREATE TABLE actividadesDeportivas
     id_disciplina   INT NOT NULL,
     id_espacio      INT NOT NULL,
     cupo_max        INT NOT NULL,
-    dia_semana      ENUM('lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'), #unicos valores aceptados
+    dia_semana      ENUM('lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'), #unicos valores aceptados
     fecha           DATE NOT NULL,
     horario         TIME NOT NULL,
     estado          ENUM('abierta', 'cerrada', 'finalizada', 'cancelada'), #unicos valores aceptados
