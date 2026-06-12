@@ -26,7 +26,7 @@ ORDER BY cant_inscriptos DESC;
 -- 4.1 Cantidad de inscriptos por carrera
 SELECT COUNT(*) cant_inscriptos, c.nombre
 FROM inscripciones i
-JOIN estudiantes e on i.id_estudiante = e.id_estudiante
+JOIN estudiantes e on i.documento = e.documento
 JOIN carreras c on e.id_carrera = c.id_carrera
 WHERE i.estado = 'confirmada'
 GROUP BY c.nombre;
@@ -34,7 +34,7 @@ GROUP BY c.nombre;
 -- 4.2 Cantidad de inscriptos por facultad
 SELECT COUNT(*) cant_inscriptos, f.nombre
 FROM inscripciones i
-JOIN estudiantes e on i.id_estudiante = e.id_estudiante
+JOIN estudiantes e on i.documento = e.documento
 JOIN carreras c on e.id_carrera = c.id_carrera
 JOIN facultades f on c.id_facultad = f.id_facultad
 WHERE i.estado = 'confirmada'
@@ -57,21 +57,21 @@ GROUP BY a.nombre
 ORDER BY porcentaje DESC;
 
 -- 7. Estudiantes con tres o más inasistencias registradas
-SELECT e.id_estudiante, e.documento, e.nombre, e.apellido, COUNT(asis.id_asistencia) AS cantidad_inasistencias
+SELECT e.documento, e.nombre, e.apellido, COUNT(asis.id_asistencia) AS cantidad_inasistencias
 FROM estudiantes e
-         JOIN inscripciones i on e.id_estudiante = i.id_estudiante
-         JOIN asistencias asis on i.id_inscripcion = asis.id_inscripcion
+JOIN inscripciones i on e.documento = i.documento
+JOIN asistencias asis on i.id_inscripcion = asis.id_inscripcion
 WHERE asis.presente = FALSE
-GROUP BY e.id_estudiante, e.documento, e.nombre, e.apellido
+GROUP BY e.documento, e.nombre, e.apellido
 HAVING cantidad_inasistencias >= 3
 ORDER BY cantidad_inasistencias DESC;
 
 -- 8. Estudiantes en lista de espera por actividad
--- VER ORDER BY (ACTIVIDAD?)
+-- VER ORDER BY (ACTIVIDAD?) Y DSP CAMBIAR EN PYTHON
 SELECT a.nombre AS actividad, e.nombre, e.apellido, e.documento, i.fecha_inscripcion
 FROM inscripciones i
-         JOIN estudiantes e ON i.id_estudiante = e.id_estudiante
-         JOIN actividadesDeportivas a ON i.id_actividad_deportiva = a.id_actividad
+ JOIN estudiantes e ON i.documento = e.documento
+ JOIN actividadesDeportivas a ON i.id_actividad_deportiva = a.id_actividad
 WHERE i.estado = 'lista_espera'
 ORDER BY a.nombre, i.fecha_inscripcion;
 
