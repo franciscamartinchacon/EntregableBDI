@@ -1,5 +1,5 @@
 from conexionSQL import get_connection
-from validacion_datos import pedir_texto_obligatorio, pedir_entero, pedir_cedula
+from validacion_datos import pedir_texto_obligatorio, pedir_entero, pedir_cedula, presione_enter
 
 
 # MENÚ DE ESTUDIANTES
@@ -74,6 +74,7 @@ def listar_carreras():
             cursor.close()
         if conexion is not None:
             conexion.close()
+        presione_enter()
 
 
 def alta_estudiante():
@@ -118,7 +119,7 @@ def alta_estudiante():
             cursor.close()
         if conexion is not None:
             conexion.close()
-
+        presione_enter()
 
 def listar_estudiantes():
 
@@ -174,6 +175,7 @@ def listar_estudiantes():
             cursor.close()
         if conexion is not None:
             conexion.close()
+        presione_enter()
 
 
 def modificar_estudiante():
@@ -245,6 +247,7 @@ def modificar_nombre(documento):
             cursor.close()
         if conexion is not None:
             conexion.close()
+        presione_enter()
 
 def modificar_apellido(documento):
     apellido = pedir_texto_obligatorio("Nuevo apellido: ")
@@ -279,6 +282,7 @@ def modificar_apellido(documento):
             cursor.close()
         if conexion is not None:
             conexion.close()
+        presione_enter()
 
 def modificar_correo(documento):
     correo = pedir_texto_obligatorio("Nuevo correo: ")
@@ -313,6 +317,7 @@ def modificar_correo(documento):
             cursor.close()
         if conexion is not None:
             conexion.close()
+        presione_enter()
 
 def modificar_carrera(documento):
     print("\n--- Carreras disponibles ---")
@@ -350,6 +355,7 @@ def modificar_carrera(documento):
             cursor.close()
         if conexion is not None:
             conexion.close()
+        presione_enter()
 
 
 def eliminar_estudiante():
@@ -447,3 +453,4 @@ def eliminar_estudiante():
             cursor.close()
         if conexion is not None:
             conexion.close()
+        presione_enter()
