@@ -1,5 +1,4 @@
 from conexionSQL import get_connection
-from datetime import datetime
 from validacion_datos import pedir_entero, pedir_texto_obligatorio, pedir_opcion_valida,presione_enter
 
 def menu_asistencias():
@@ -15,10 +14,13 @@ def menu_asistencias():
 
         if opcion == "1":
             registrar_asistencia()
+            presione_enter()
         elif opcion == "2":
             listar_asistencias()
+            presione_enter()
         elif opcion == "3":
             listar_inscripciones_confirmadas()
+            presione_enter()
         elif opcion == "0":
             print("Saliendo...")
             break
@@ -39,7 +41,7 @@ def listar_inscripciones_confirmadas():
         sql = """
             SELECT i.id_inscripcion, e.documento, e.nombre, e.apellido, a.nombre AS actividad, i.estado
             FROM inscripciones i
-            JOIN estudiantes e ON i.id_estudiante = e.id_estudiante
+            JOIN estudiantes e ON i.documento = e.documento
             JOIN actividadesDeportivas a ON i.id_actividad_deportiva = a.id_actividad
             WHERE i.estado = 'confirmada'
             ORDER BY a.nombre, e.apellido, e.nombre;
@@ -69,8 +71,6 @@ def listar_inscripciones_confirmadas():
             cursor.close()
         if conexion is not None:
             conexion.close()
-
-        presione_enter()
     
 
 def obtener_inscripcion_confirmada(id_inscripcion):
@@ -85,7 +85,7 @@ def obtener_inscripcion_confirmada(id_inscripcion):
         sql = """
             SELECT i.id_inscripcion, i.estado, e.nombre, e.apellido, a.nombre AS actividad
             FROM inscripciones i
-            JOIN estudiantes e ON i.id_estudiante = e.id_estudiante
+            JOIN estudiantes e ON i.documento = e.documento
             JOIN actividadesDeportivas a ON i.id_actividad_deportiva = a.id_actividad
             WHERE i.id_inscripcion = %s;
         """
@@ -112,8 +112,6 @@ def obtener_inscripcion_confirmada(id_inscripcion):
         if conexion is not None:
             conexion.close()
 
-        presione_enter()
-
 
 def registrar_asistencia():
 
@@ -135,15 +133,7 @@ def registrar_asistencia():
         f"{inscripcion[2]} {inscripcion[3]} | Actividad: {inscripcion[4]}"
     )
 
-    fecha_texto = pedir_texto_obligatorio("Fecha de asistencia (DD/MM/AAAA): ")
-
-    try:
-        fecha = datetime.strptime(fecha_texto, "%d/%m/%Y").date()
-    except ValueError:
-        print("Error: la fecha debe tener el formato DD/MM/AAAA.")
-        return
-
-    fecha_sql = fecha.strftime("%Y-%m-%d")
+    fecha_sql = pedir_texto_obligatorio("Fecha de asistencia (AAAA-MM-DD): ")
 
     opciones_validas = ["si", "no"]
     respuesta = pedir_opcion_valida("¿Estuvo presente? (si/no): ", opciones_validas)
@@ -176,15 +166,14 @@ def registrar_asistencia():
     except Exception as e:
         print("Error al registrar asistencia.")
         print(e)
-        print("Puede ser que ya exista una asistencia registrada para esa inscripción en esa fecha.")
+        print("Revise que la fecha tenga formato AAAA-MM-DD.")
+        print("También puede ser que ya exista una asistencia registrada para esa inscripción en esa fecha.")
 
     finally:
         if cursor is not None:
             cursor.close()
         if conexion is not None:
             conexion.close()
-
-        presione_enter()
 
 def listar_asistencias():
 
@@ -201,7 +190,7 @@ def listar_asistencias():
             SELECT asis.id_asistencia, asis.fecha, asis.presente, e.documento, e.nombre, e.apellido, a.nombre AS actividad
             FROM asistencias asis
             JOIN inscripciones i ON asis.id_inscripcion = i.id_inscripcion
-            JOIN estudiantes e ON i.id_estudiante = e.id_estudiante
+            JOIN estudiantes e ON i.documento = e.documento
             JOIN actividadesDeportivas a ON i.id_actividad_deportiva = a.id_actividad
             ORDER BY asis.fecha, a.nombre, e.apellido, e.nombre;
         """
@@ -236,5 +225,3 @@ def listar_asistencias():
             cursor.close()
         if conexion is not None:
             conexion.close()
-
-        presione_enter()

@@ -62,7 +62,7 @@ def alta_disciplina():
     except Exception as e: #muestra el error específico?
         print("Error al crear disciplina:")
         print(e)
-        print("Puede ser que el nombre ya existan.")
+        print("Puede ser que el nombre ya exista.")
 
     finally:
         if cursor is not None:#evita el error si algo falló al abrirse al abrir el cursor.
@@ -80,7 +80,7 @@ def borrar_disciplina():
 
     confirmacion = input("¿Seguro que desea eliminar esta disciplina? (si/no): ").lower()
 
-    if confirmacion != "s":
+    if confirmacion != "si":
         print("Operación cancelada.")
         return
 
@@ -181,7 +181,7 @@ def listar_disciplinas():
                 SELECT 
                     d.id_disciplina, d.nombre
                 FROM disciplinas d
-                ORDER BY d.id_disciplina, d.nombre;
+                ORDER BY d.id_disciplina;
             """
 
         cursor.execute(sql)
