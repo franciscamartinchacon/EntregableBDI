@@ -158,7 +158,8 @@ def listar_estudiantes():
                 print(
                     f"ID: {estudiante[0]} | "
                     f"Documento: {estudiante[1]} | "
-                    f"Nombre: {estudiante[2]} {estudiante[3]} | "
+                    f"Nombre: {estudiante[2]} | "
+                    f"Apellido: {estudiante[3]} | "
                     f"Correo: {estudiante[4]} | "
                     f"Carrera: {estudiante[5]} | "
                     f"Facultad: {estudiante[6]}"
@@ -194,13 +195,13 @@ def modificar_estudiante():
         opcion = input("Seleccione una opción: ")
 
         if opcion == "1":
-            modificar_nombre()
+            modificar_nombre(documento)
         elif opcion == "2":
-            modificar_apellido()
+            modificar_apellido(documento)
         elif opcion == "3":
-            modificar_correo()
+            modificar_correo(documento)
         elif opcion == "4":
-            modificar_carrera()
+            modificar_carrera(documento)
         elif opcion == "0":
             print("Volviendo al menú de estudiantes...")
             break
@@ -352,18 +353,11 @@ def modificar_carrera(documento):
 
 
 def eliminar_estudiante():
-
     print("\n--- Eliminar estudiante ---")
 
     listar_estudiantes()
 
-    id_estudiante = pedir_entero("\nIngrese el ID del estudiante a eliminar: ")
-
-    confirmacion = input("¿Seguro que desea eliminar este estudiante? (si/no): ").lower()
-
-    if confirmacion != "si":
-        print("Operación cancelada.")
-        return
+    documento = pedir_entero("\nIngrese el documento del estudiante a eliminar: ")
 
     conexion = None
     cursor = None
@@ -372,23 +366,81 @@ def eliminar_estudiante():
         conexion = get_connection()
         cursor = conexion.cursor()
 
-        sql = """
-            DELETE FROM estudiantes
-            WHERE id_estudiante = %s;
+        #Verificar si el estudiante existe
+        sql_existe = """
+            SELECT COUNT(*)
+            FROM estudiantes
+            WHERE documento = %s;
         """
 
-        cursor.execute(sql, (id_estudiante,))
+        cursor.execute(sql_existe, (documento,))
+        existe = cursor.fetchone()[0]
+
+        if existe == 0:
+            print("No existe un estudiante con ese documento.")
+            return
+
+        # Verificar si tiene inscripciones
+        sql_inscripciones = """
+            SELECT COUNT(*)
+            FROM inscripciones
+            WHERE documento = %s;
+        """
+
+        cursor.execute(sql_inscripciones, (documento,))
+        cantidad_inscripciones = cursor.fetchone()[0]
+
+        if cantidad_inscripciones > 0:
+            print(f"El estudiante tiene {cantidad_inscripciones} inscripción/es asociada/s.")
+            respuesta = input("¿Querés borrar también sus inscripciones y asistencias? (si/no): ").strip().lower()
+
+            if respuesta != "si":
+                print("No se eliminó el estudiante.")
+                return
+
+            #Borrar asistencias asociadas a las inscripciones del estudiante
+            sql_borrar_asistencias = """
+                DELETE a
+                FROM asistencias a
+                JOIN inscripciones i
+                    ON a.id_inscripcion = i.id_inscripcion
+                WHERE i.documento = %s;
+            """
+
+            cursor.execute(sql_borrar_asistencias, (documento,))
+
+            #Borrar inscripciones del estudiante
+            sql_borrar_inscripciones = """
+                DELETE FROM inscripciones
+                WHERE documento = %s;
+            """
+
+            cursor.execute(sql_borrar_inscripciones, (documento,))
+
+        else:
+            confirmacion = input("¿Seguro que desea eliminar este estudiante? (si/no): ").strip().lower()
+
+            if confirmacion != "si":
+                print("Operación cancelada.")
+                return
+
+        #Borrar estudiante
+        sql_borrar_estudiante = """
+            DELETE FROM estudiantes
+            WHERE documento = %s;
+        """
+
+        cursor.execute(sql_borrar_estudiante, (documento,))
         conexion.commit()
 
-        if cursor.rowcount > 0:
-            print("Estudiante eliminado correctamente.")
-        else:
-            print("No se encontró un estudiante con ese ID.")
+        print("Estudiante eliminado correctamente.")
 
     except Exception as e:
+        if conexion is not None:
+            conexion.rollback()
+
         print("Error al eliminar estudiante:")
         print(e)
-        print("No se puede eliminar si el estudiante tiene inscripciones asociadas.")
 
     finally:
         if cursor is not None:

@@ -74,12 +74,12 @@ CREATE TABLE actividadesDeportivas
 CREATE TABLE inscripciones
 (
     id_inscripcion          INT AUTO_INCREMENT,
-    id_estudiante           INT NOT NULL,
+    documento           INT NOT NULL,
     id_actividad_deportiva  INT NOT NULL,
     fecha_inscripcion       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     estado                  ENUM ('confirmada','lista_espera'),
-    PRIMARY KEY (id_estudiante, id_actividad_deportiva,fecha_inscripcion), #controla que un mismo alumno solo se pueda anotar a una misma actividad por dia
-    FOREIGN KEY (id_estudiante) REFERENCES estudiantes(id_estudiante),
+    PRIMARY KEY (documento, id_actividad_deportiva,fecha_inscripcion), #controla que un mismo alumno solo se pueda anotar a una misma actividad por dia
+    FOREIGN KEY (documento) REFERENCES estudiantes(documento),
     FOREIGN KEY (id_actividad_deportiva) REFERENCES actividadesDeportivas(id_actividad)
 );
 
