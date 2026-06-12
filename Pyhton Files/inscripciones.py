@@ -2,7 +2,7 @@
 from conexionSQL import get_connection
 from validacion_datos import pedir_entero
 from estudiantes import listar_estudiantes
-from actividades import listar_actividades
+from actividades import listar_actividades, presione_enter
 
 def gestion_inscripciones():
     while True:
@@ -86,6 +86,7 @@ def inscribir_estudiante():
             cursor.close()
         if conexion is not None:
             conexion.close()
+        presione_enter()
 
 
 def listar_inscripciones():
@@ -124,3 +125,4 @@ def listar_inscripciones():
             cursor.close()
         if conexion is not None:
             conexion.close()
+        presione_enter()

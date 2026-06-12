@@ -1,4 +1,5 @@
 from conexionSQL import get_connection
+from validacion_datos import presione_enter
 
 #despielga un menu con las consultas
 def menu_reportes():
@@ -133,6 +134,7 @@ def menu_reportes():
             cursor.close()
         if conexion is not None:
             conexion.close()
+        presione_enter()
 
 
 def consulta4():

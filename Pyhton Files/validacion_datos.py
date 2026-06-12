@@ -46,18 +46,18 @@ def pedir_opcion_valida(mensaje, opciones_validas):
 
 
 def pedir_bool(mensaje):
-    # Pide s/n por consola y luego lo convierte a True o False
+    # Pide si/no por consola y luego lo convierte a True o False
     while True:
         valor = input(mensaje).strip().lower() #saa espacios en blanco y en minuscula
 
         if valor == "":
             print("Error. Este campo no puede estar vacío.")
-        elif valor == "s":
+        elif valor == "si":
             return True
-        elif valor == "n":
+        elif valor == "no":
             return False
         else:
-            print("Eror. Ingrese un valor válido.")
+            print("Error. Ingrese un valor válido.")
 
 def pedir_cedula(mensaje):
     # Pide un número entero de 8 digitos mayor que cero.
@@ -68,5 +68,16 @@ def pedir_cedula(mensaje):
             return numero
 
         print("Error: el número debe ser mayor que cero.")
+
+def presione_enter():
+    while True:
+        respuesta = input("\nPresione Enter para continuar...")
+
+        if respuesta == "":
+            break
+
+        print("No escriba nada, solo presione Enter.")
+
+    print("\nVolviendo... ")
 
 #normalizar datos???

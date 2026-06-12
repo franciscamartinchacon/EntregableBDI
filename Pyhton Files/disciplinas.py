@@ -1,6 +1,6 @@
 from conexionSQL import get_connection
-from validacion_datos import pedir_texto_obligatorio
-from validacion_datos import pedir_entero
+from validacion_datos import pedir_texto_obligatorio, pedir_entero, presione_enter
+
 
 #Depliega otro menu [agregar, borrar, modificar, disciplinas]
 
@@ -9,7 +9,7 @@ def menu_disciplinas():
         print("\n--- ABM disciplinas ---")
         print("1. Alta disciplina") #Agregar disciplina
         print("2. Borrar disciplina")
-        print("3. Actualizar disciplina")
+        print("3. Modificar disciplina")
         print("4. Listar disciplinas")
         print("0. Salir")
 
@@ -20,7 +20,7 @@ def menu_disciplinas():
         elif opcion == "2":
             borrar_disciplina()
         elif opcion == "3":
-            actualizar_disciplina()
+            modificar_disciplina()
         elif opcion == "4":
             listar_disciplinas()
         elif opcion == "0":
@@ -67,6 +67,7 @@ def alta_disciplina():
         if conexion is not None:
             conexion.close()
 
+        presione_enter()
 
 def borrar_disciplina():
     print("\n--- Eliminar disciplina ---")
@@ -111,8 +112,10 @@ def borrar_disciplina():
         if conexion is not None:
             conexion.close()
 
+        presione_enter()
 
-def actualizar_disciplina():
+
+def modificar_disciplina():
     """
     Primero muestra la lista de disciplinas para que el usuario pueda ver el ID.
     Luego pide los nuevos datos y ejecuta un UPDATE.
@@ -162,6 +165,7 @@ def actualizar_disciplina():
             cursor.close()
         if conexion is not None:
             conexion.close()
+        presione_enter()
 
 def listar_disciplinas():
     print("\n--- Listado de disciplinas ---")
@@ -198,3 +202,4 @@ def listar_disciplinas():
             cursor.close()
         if conexion is not None:
             conexion.close()
+        presione_enter()
