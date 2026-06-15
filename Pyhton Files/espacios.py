@@ -1,8 +1,5 @@
 from conexionSQL import get_connection
-from validacion_datos import pedir_texto_obligatorio
-from validacion_datos import pedir_entero
-from validacion_datos import pedir_bool, presione_enter
-
+from validacion_datos import pedir_texto_obligatorio, pedir_entero, pedir_bool, presione_enter
 
 def menu_espacios():
     while True:

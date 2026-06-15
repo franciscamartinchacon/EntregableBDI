@@ -1,7 +1,7 @@
 from conexionSQL import get_connection
 from validacion_datos import presione_enter
 
-#despielga un menu con las consultas
+#despliega un menu con las consultas
 def menu_reportes():
     while True:
         print("\n--- Consultar Reportes ---")
@@ -49,7 +49,7 @@ def menu_reportes():
                     print("Actividades con mayor cantidad de inscriptos confirmados.")
                     for consulta in consultas:
                         print(
-                            f"ID Activdad: {consulta[0]} | "
+                            f"ID Actividad: {consulta[0]} | "
                             f"Nombre: {consulta[1]} | "
                             f"Cantidad de inscripciones: {consulta[2]} | "
                         )
@@ -67,7 +67,7 @@ def menu_reportes():
                 consultas = cursor.fetchall()
 
                 if len(consultas) == 0:
-                    print("No hay activdades con cupos disponibles.")
+                    print("No hay actividades con cupos disponibles.")
                 else:
                     print("Actividades con cupos disponibles.")
                     for consulta in consultas:
@@ -135,7 +135,7 @@ def menu_reportes():
                 query = """
                 SELECT a.nombre, ROUND(AVG(asis.presente) * 100, 2) AS porcentaje
                 FROM actividadesDeportivas a
-                LEFT JOIN inscripciones i ON i.id_actividad = a.id_actividad -- para inculir de cero tambien
+                LEFT JOIN inscripciones i ON i.id_actividad = a.id_actividad -- para incluir de cero tambien
                 LEFT JOIN asistencias asis ON i.id_inscripcion = asis.id_inscripcion AND i.estado = 'confirmada'
                 GROUP BY a.nombre
                 ORDER BY porcentaje DESC;
@@ -175,7 +175,7 @@ def menu_reportes():
                     print("Estudiantes con tres o más inasistencias registradas.")
                     for consulta in consultas:
                         print(
-                            f"Docuemento {consulta[0]} | "
+                            f"Documento {consulta[0]} | "
                             f"Nombre: {consulta[1]} | "
                             f"Apellido: {consulta[2]} | "
                             f"Cantidad de inasistencias: {consulta[3]}"
@@ -202,8 +202,8 @@ def menu_reportes():
                             f"Actividad: {consulta[0]} | "
                             f"Nombre: {consulta[1]} | "
                             f"Apellido: {consulta[2]} | "
-                            f"Docuemnto: {consulta[3]} | "
-                            f"Fecha de inscripcion: {consulta[4]}"
+                            f"Documento: {consulta[3]} | "
+                            f"Fecha de inscripción: {consulta[4]}"
                         )
 
             elif opcion == "9":

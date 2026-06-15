@@ -1,5 +1,5 @@
 from conexionSQL import get_connection
-from validacion_datos import pedir_entero, pedir_texto_obligatorio, presione_enter
+from validacion_datos import pedir_entero, presione_enter
 from estudiantes import menu_estudiantes
 from docentes import menu_docentes
 from actividades import menu_actividades, listar_actividades
@@ -39,60 +39,58 @@ def iniciar_sesion():
 
         #Consulta en SQL para determinar el rol del usuario.
         #Busca el docuemnto y la contra en todas las tablas
-        busca_usuario = True
 
         #busca en admins primero
-        while busca_usuario == True:
-            sql_admin = """
-                    SELECT documento, nombre, apellido
-                    FROM admins
-                    WHERE documento = %s
-                    AND contrasena = %s
-                """
+        sql_admin = """
+                SELECT documento, nombre, apellido
+                FROM admins
+                WHERE documento = %s
+                AND contrasena = %s
+            """
 
-            cursor.execute(sql_admin, (documento, contrasena))
-            admin = cursor.fetchone() #sin impirimir, solo lo guarda en admin
+        cursor.execute(sql_admin, (documento, contrasena))
+        admin = cursor.fetchone() #sin impirimir, solo lo guarda en admin
 
-            if admin is not None:
-                print(f"\nBienvenido/a Admin: {admin[1]} {admin[2]}")
-                menu_admins()
-                return #deja de buscar
+        if admin is not None:
+            print(f"\nBienvenido/a Admin: {admin[1]} {admin[2]}")
+            menu_admins()
+            return #deja de buscar
 
 
-            #busca en docentes
-            sql_docentes = """
-                    SELECT documento, nombre, apellido
-                    FROM docentes
-                    WHERE documento = %s
-                    AND contrasena = %s
-                            """
+        #busca en docentes
+        sql_docentes = """
+                SELECT documento, nombre, apellido
+                FROM docentes
+                WHERE documento = %s
+                AND contrasena = %s
+                        """
 
-            cursor.execute(sql_docentes, (documento, contrasena))
-            docente = cursor.fetchone()  # sin impirimir, solo lo guarda en admin
+        cursor.execute(sql_docentes, (documento, contrasena))
+        docente = cursor.fetchone()  # sin impirimir, solo lo guarda en admin
 
-            if docente is not None:
-                print(f"\nBienvenido/a Docente: {docente[1]} {docente[2]}")
-                menu_para_docentes()
-                return
+        if docente is not None:
+            print(f"\nBienvenido/a Docente: {docente[1]} {docente[2]}")
+            menu_para_docentes()
+            return
 
-            #busca en estudiantes
-            sql_estudiante = """
-                    SELECT documento, nombre, apellido
-                    FROM docentes
-                    WHERE documento = %s
-                    AND contrasena = %s
-                            """
+        #busca en estudiantes
+        sql_estudiante = """
+                SELECT documento, nombre, apellido
+                FROM estudiantes
+                WHERE documento = %s
+                AND contrasena = %s
+                        """
 
-            cursor.execute(sql_estudiante, (documento, contrasena))
-            estudiante = cursor.fetchone()  # sin impirimir, solo lo guarda en admin
+        cursor.execute(sql_estudiante, (documento, contrasena))
+        estudiante = cursor.fetchone()  # sin impirimir, solo lo guarda en admin
 
-            if estudiante is not None:
-                print(f"\nBienvenido/a Estudiante: {estudiante[1]} {estudiante[2]}")
-                menu_para_estudiante()
-                return
+        if estudiante is not None:
+            print(f"\nBienvenido/a Estudiante: {estudiante[1]} {estudiante[2]}")
+            menu_para_estudiante(documento)
+            return
 
-            #si sigue recorriendo porque no encontró nada
-            print("Documento o contraseña incorrectos.")
+        #si sigue recorriendo porque no encontró nada
+        print("Documento o contraseña incorrectos.")
 
     except Exception as e:
         print("Error al iniciar sesión:")
