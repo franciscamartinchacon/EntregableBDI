@@ -27,8 +27,8 @@ def login():
 def iniciar_sesion():
     print("\n -- Para iniciar sesión, ingrese:  -- ")
 
-    documento = pedir_texto_obligatorio("Documento: ")
-    contrasena = pedir_entero("Contraseña: ")
+    documento = pedir_entero("Documento: ")
+    contrasena = input("Contraseña: ") #no requiere ninguna caracteristica especial
 
     conexion = None
     cursor = None
