@@ -13,8 +13,8 @@ Limit 3; -- para que no devuelva una sola, sino el top 3
 -- 2. Actividades con cupos disponibles.
 SELECT a.id_actividad, a.nombre, a.estado, (SELECT a.cupo_max - COUNT(*) FROM inscripciones i WHERE i.id_actividad= a.id_actividad AND i.estado = 'confirmada') as cant_cupos_disponibles  -- subconslta
 FROM actividadesDeportivas a
-WHERE a.cupo_max > (SELECT COUNT(*) FROM inscripciones i WHERE i.id_actividad = a.id_actividad AND i.estado = 'confirmada')
-ORDER BY cant_cupos_disponibles DESC; #deberia filtar solo actividades abiertas??
+WHERE a.estado = 'abierta' AND a.cupo_max > (SELECT COUNT(*) FROM inscripciones i WHERE i.id_actividad = a.id_actividad AND i.estado = 'confirmada')
+ORDER BY cant_cupos_disponibles DESC;
 
 -- 3. Cantidad de inscriptos por disciplina deportiva.
 SELECT COUNT(I.id_inscripcion) as cant_inscriptos, d.nombre
@@ -68,7 +68,6 @@ HAVING cantidad_inasistencias >= 3
 ORDER BY cantidad_inasistencias DESC;
 
 -- 8. Estudiantes en lista de espera por actividad
--- VER ORDER BY (ACTIVIDAD?) Y DSP CAMBIAR EN PYTHON
 SELECT a.nombre AS actividad, e.nombre, e.apellido, e.documento, i.fecha_inscripcion
 FROM inscripciones i
  JOIN estudiantes e ON i.documento = e.documento
