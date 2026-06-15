@@ -218,9 +218,9 @@ def listar_actividades():
                     f"Cupo máximo: {actividad[5]} | "
                     f"Día: {actividad[6]} | "
                     f"Fecha: {actividad[7]} | "
-                    f"Hora_inicio: {actividad[8]} | "
-                    f"Hora_fin: {actividad[9]} | "
-                    f"Estado: {actividad[10]}"
+                    f"Hora inicio: {actividad[8]} | "
+                    f"Hora fin: {actividad[9]} | "
+                    f"Estado: {actividad[10]} | "
                     f"Docente: {actividad[11]} {actividad[12]}"
                 )
 
