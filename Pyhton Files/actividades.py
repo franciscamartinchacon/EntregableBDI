@@ -29,15 +29,50 @@ def menu_actividades():
         elif opcion == "4":
             eliminar_actividad()
             presione_enter()
-        elif opcion == "5":
-            cambiar_estado_actividad()
-            presione_enter()
         elif opcion == "0":
             print("Saliendo...")
             break
         else:
             print("Opción inválida. Intente nuevamente.")
 
+
+def listar_docentes():
+    print("\n--- Docentes disponibles ---")
+
+    conexion = None
+    cursor = None
+
+    try:
+        conexion = get_connection()
+        cursor = conexion.cursor()
+
+        sql = """
+            SELECT documento, nombre, apellido
+            FROM docentes
+            ORDER BY apellido, nombre;
+        """
+
+        cursor.execute(sql)
+        docentes = cursor.fetchall()
+
+        if len(docentes) == 0:
+            print("No hay docentes registrados.")
+        else:
+            for docente in docentes:
+                print(
+                    f"Documento: {docente[0]} | "
+                    f"Docente: {docente[1]} {docente[2]}"
+                )
+
+    except Exception as e:
+        print("Error al listar docentes:")
+        print(e)
+
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if conexion is not None:
+            conexion.close()
 
 def alta_actividad():
 
@@ -88,8 +123,7 @@ def alta_actividad():
 
     print("\nSeleccione un docente:")
     listar_docentes()
-    docente_asignado = pedir_entero("Ingrese el docuemento del docente asignado: ")
-
+    docente_asignado = pedir_entero("Ingrese el documento del docente asignado: ")
 
     conexion = None
     cursor = None
@@ -100,8 +134,8 @@ def alta_actividad():
 
         sql = """
             INSERT INTO actividadesDeportivas
-            (nombre, id_disciplina, id_espacio, cupo_max, dia_semana, fecha, hora_inicio, hora_fin, estado)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
+            (nombre, id_disciplina, id_espacio, cupo_max, dia_semana, fecha, hora_inicio, hora_fin, estado, docente_asignado)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
         """
 
         valores = (
@@ -113,7 +147,8 @@ def alta_actividad():
             fecha,
             hora_inicio,
             hora_fin,
-            estado
+            estado,
+            docente_asignado
         )
 
         cursor.execute(sql, valores)
@@ -156,10 +191,14 @@ def listar_actividades():
                 a.fecha, 
                 a.hora_inicio, 
                 a.hora_fin, 
-                a.estado
+                a.estado,
+                doc.nombre, 
+                doc.apellido
+                
             FROM actividadesDeportivas a
             JOIN disciplinas d ON a.id_disciplina = d.id_disciplina
             JOIN espaciosDeportivos e ON a.id_espacio = e.id_espacio
+            JOIN docentes doc ON a.docente_asignado = doc.documento
             ORDER BY a.fecha, a.hora_inicio;
         """
 
@@ -182,6 +221,7 @@ def listar_actividades():
                     f"Hora_inicio: {actividad[8]} | "
                     f"Hora_fin: {actividad[9]} | "
                     f"Estado: {actividad[10]}"
+                    f"Docente: {actividad[11]} {actividad[12]}"
                 )
 
     except Exception as e:
@@ -213,6 +253,7 @@ def modificar_actividad():
         print("6. Fecha")
         print("7. Hora inicio")
         print("8. Estado")
+        print("9. Docente")
         print("0. Volver al menú de actividades")
 
         opcion = input("Seleccione una opción: ")
@@ -233,6 +274,8 @@ def modificar_actividad():
             modificar_horario_actividad(id_actividad)
         elif opcion == "8":
             modificar_estado_actividad(id_actividad)
+        elif opcion == "9":
+            modificar_docente_actividad(id_actividad)
         elif opcion == "0":
             print("Volviendo al menú de actividades...")
             break
@@ -555,6 +598,45 @@ def modificar_estado_actividad(id_actividad):
             if conexion is not None:
                 conexion.close()
 
+def modificar_docente_actividad(id_actividad):
+
+    print("\nSeleccione el nuevo docente:")
+    listar_docentes()
+
+    docente_asignado = pedir_entero("Nuevo documento del docente asignado: ")
+
+    conexion = None
+    cursor = None
+
+    try:
+        conexion = get_connection()
+        cursor = conexion.cursor()
+
+        sql = """
+            UPDATE actividadesDeportivas
+            SET docente_asignado = %s
+            WHERE id_actividad = %s;
+        """
+
+        cursor.execute(sql, (docente_asignado, id_actividad))
+        conexion.commit()
+
+        if cursor.rowcount > 0:
+            print("Docente asignado modificado correctamente.")
+        else:
+            print("No se encontró una actividad con ese ID.")
+
+    except Exception as e:
+        print("Error al modificar el docente asignado:")
+        print(e)
+        print("Puede ser que no exista un docente con ese documento.")
+
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if conexion is not None:
+            conexion.close()
+
 
 def eliminar_actividad():
 
@@ -566,7 +648,7 @@ def eliminar_actividad():
 
     confirmacion = input("¿Seguro que desea eliminar esta actividad? (si/no): ").strip().lower()
 
-    if confirmacion != "s":
+    if confirmacion != "si":
         print("Operación cancelada.")
         return
 
@@ -595,58 +677,6 @@ def eliminar_actividad():
         print(e)
         print("Puede ser que la actividad tenga inscripciones asociadas.")
         print("En ese caso, use la opción 'Cambiar estado de actividad' y seleccione 'cancelada'.")
-
-    finally:
-        if cursor is not None:
-            cursor.close()
-        if conexion is not None:
-            conexion.close()
-
-
-def cambiar_estado_actividad():
-
-    print("\n--- Cambiar estado de actividad ---")
-
-    listar_actividades()
-
-    id_actividad = pedir_entero("\nIngrese el ID de la actividad: ")
-
-    estados_validos = [
-        "abierta",
-        "cerrada",
-        "finalizada",
-        "cancelada"
-    ]
-
-    nuevo_estado = pedir_opcion_valida(
-        "Nuevo estado (abierta/cerrada/finalizada/cancelada): ",
-        estados_validos
-    )
-
-    conexion = None
-    cursor = None
-
-    try:
-        conexion = get_connection()
-        cursor = conexion.cursor()
-
-        sql = """
-            UPDATE actividadesDeportivas
-            SET estado = %s
-            WHERE id_actividad = %s;
-        """
-
-        cursor.execute(sql, (nuevo_estado, id_actividad))
-        conexion.commit()
-
-        if cursor.rowcount > 0:
-            print("Estado de la actividad actualizado correctamente.")
-        else:
-            print("No se encontró una actividad con ese ID.")
-
-    except Exception as e:
-        print("Error al cambiar el estado de la actividad.")
-        print(e)
 
     finally:
         if cursor is not None:
