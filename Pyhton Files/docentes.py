@@ -51,7 +51,7 @@ def alta_docente():
         cursor = conexion.cursor()
 
         sql = """
-            INSERT INTO estudiantes 
+            INSERT INTO docentes 
             (documento, nombre, apellido, correo, contrasena)
             VALUES (%s, %s, %s, %s, %s);
         """
@@ -90,9 +90,9 @@ def listar_docentes():
                 d.documento,
                 d.nombre,
                 d.apellido,
-                d.correo,
+                d.correo
             FROM docentes d
-            ORDER BY e.documento, e.apellido, e.nombre;
+            ORDER BY d.documento, d.apellido, d.nombre;
         """
 
         cursor.execute(sql)
@@ -291,42 +291,67 @@ def eliminar_docente():
         sql_actividades = """
             SELECT COUNT(*)
             FROM actividadesDeportivas
-            WHERE docente_asginado = %s;
+            WHERE docente_asignado = %s;
         """
-
 
         cursor.execute(sql_actividades, (documento,))
         cantidad_actividades = cursor.fetchone()[0]
 
         if cantidad_actividades > 0:
-            print(f"El docente tiene {cantidad_actividades} actividades asociada/s.")
-            respuesta = pedir_bool("¿Querés borrar también sus actividades? (si/no): ").strip().lower()
+            print(f"El docente tiene {cantidad_actividades} actividad/es asignada/s.")
+
+            respuesta = pedir_bool("¿Querés reasignar esas actividades a otro docente? (si/no): ")
 
             if respuesta == False:
                 print("No se eliminó el docente.")
                 return
 
-            #Borrar actividades asociadas al docente
-            sql_borrar_actividades = """
-                DELETE a
-                FROM actividadesDeportivas a
-                WHERE a.docente_asignado = %s;
-            """
+            print("\nSeleccione el nuevo docente para esas actividades:")
+            listar_docentes()
 
-            cursor.execute(sql_borrar_actividades, (documento,))
+            nuevo_docente = pedir_cedula("Ingrese el documento del nuevo docente: ")
 
-        else:
-            confirmacion = input("¿Seguro que desea eliminar este docente? (si/no): ").strip().lower()
-
-            if confirmacion != "si":
-                print("Operación cancelada.")
+            if nuevo_docente == documento:
+                print("No podés reasignar las actividades al mismo docente que querés eliminar.")
                 return
 
-        #Borrar docente
+            # Verificar que el nuevo docente exista
+            sql_nuevo_docente = """
+                        SELECT COUNT(*)
+                        FROM docentes
+                        WHERE documento = %s;
+                    """
+
+            cursor.execute(sql_nuevo_docente, (nuevo_docente,))
+            existe_nuevo_docente = cursor.fetchone()[0]
+
+            if existe_nuevo_docente == 0:
+                print("No existe un docente con ese documento.")
+                return
+
+            # Reasignar actividades
+            sql_reasignar = """
+                        UPDATE actividadesDeportivas
+                        SET docente_asignado = %s
+                        WHERE docente_asignado = %s;
+                    """
+
+            cursor.execute(sql_reasignar, (nuevo_docente, documento))
+
+            print("Actividades reasignadas correctamente.")
+
+        confirmacion = input("¿Seguro que desea eliminar este docente? (si/no): ").strip().lower()
+
+        if confirmacion not in ["s", "si"]:
+            print("Operación cancelada.")
+            conexion.rollback()
+            return
+
+        # Borrar docente
         sql_borrar_docente = """
-            DELETE FROM docentes
-            WHERE documento = %s;
-        """
+                    DELETE FROM docentes
+                    WHERE documento = %s;
+                """
 
         cursor.execute(sql_borrar_docente, (documento,))
         conexion.commit()
@@ -337,7 +362,8 @@ def eliminar_docente():
         if conexion is not None:
             conexion.rollback()
 
-        print("Error al eliminar docente:")
+        print("Error al eliminar docente.")
+        print("No se guardaron los cambios realizados.")
         print(e)
 
     finally:

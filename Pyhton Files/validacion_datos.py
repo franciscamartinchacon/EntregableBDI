@@ -76,7 +76,7 @@ def pedir_cedula(mensaje):
         if numero > 0 and len(str(numero))==8: #pasamos a str para contar digitos
             return numero
 
-        print("Error: el número debe ser mayor que cero.")
+        print("Error: el documento tiene que tener 8 dígitos.")
 
 def presione_enter():
     while True:

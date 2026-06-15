@@ -85,7 +85,7 @@ def alta_estudiante():
     nombre = pedir_texto_obligatorio("Nombre: ")
     apellido = pedir_texto_obligatorio("Apellido: ")
     correo = pedir_texto_obligatorio("Correo electrónico: ")
-    contrasena = pedir_texto_obligatorio("COntraseña: ") #solo para ingresar
+    contrasena = pedir_texto_obligatorio("Contraseña: ") #solo para ingresar
 
     listar_carreras()
     id_carrera = pedir_entero("Ingrese el ID de la carrera: ")
@@ -100,7 +100,7 @@ def alta_estudiante():
         sql = """
             INSERT INTO estudiantes 
             (documento, nombre, apellido, correo, contrasena, id_carrera)
-            VALUES (%s, %s, %s, %s,%s, %s);
+            VALUES (%s, %s, %s, %s, %s, %s);
         """
 
         valores = (documento, nombre, apellido, correo, contrasena, id_carrera)
@@ -183,6 +183,7 @@ def modificar_estudiante():
 
     documento = pedir_cedula("\nIngrese el documento del estudiante a modificar: ")
 
+
     while True:
         print("\n--- Ingrese el dato que quiere modificar ---")
         print("1. Nombre del estudiante")
@@ -201,6 +202,8 @@ def modificar_estudiante():
             modificar_correo(documento)
         elif opcion == "4":
             modificar_carrera(documento)
+        elif opcion == "5":
+            modificar_contrasena(documento)
         elif opcion == "0":
             print("Volviendo al menú de estudiantes...")
             break
@@ -350,6 +353,39 @@ def modificar_carrera(documento):
         if conexion is not None:
             conexion.close()
 
+def modificar_contrasena(documento):
+    contrasena = pedir_texto_obligatorio("Nueva contraseña: ")
+
+    conexion = None
+    cursor = None
+
+    try:
+        conexion = get_connection()
+        cursor = conexion.cursor()
+
+        sql = """
+            UPDATE estudiantes
+            SET contrasena = %s
+            WHERE documento = %s;
+        """
+
+        cursor.execute(sql, (contrasena, documento))
+        conexion.commit()
+
+        if cursor.rowcount > 0:
+            print("Contraseña modificada correctamente.")
+        else:
+            print("No se encontró un estudiante con ese documento.")
+
+    except Exception as e:
+        print("Error al modificar la contraseña:")
+        print(e)
+
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if conexion is not None:
+            conexion.close()
 
 def eliminar_estudiante():
     print("\n--- Eliminar estudiante ---")

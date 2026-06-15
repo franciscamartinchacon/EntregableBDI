@@ -59,7 +59,7 @@ def alta_disciplina():
 
         print("Disciplina creada correctamente.")
 
-    except Exception as e: #muestra el error específico?
+    except Exception as e:
         print("Error al crear disciplina:")
         print(e)
         print("Puede ser que el nombre ya exista.")
@@ -116,10 +116,7 @@ def borrar_disciplina():
 
 
 def modificar_disciplina():
-    """
-    Primero muestra la lista de disciplinas para que el usuario pueda ver el ID.
-    Luego pide los nuevos datos y ejecuta un UPDATE.
-    """
+
     print("\n--- Modificar disciplina ---")
 
     listar_disciplinas()
