@@ -85,6 +85,7 @@ def alta_estudiante():
     nombre = pedir_texto_obligatorio("Nombre: ")
     apellido = pedir_texto_obligatorio("Apellido: ")
     correo = pedir_texto_obligatorio("Correo electrónico: ")
+    contrasena = pedir_texto_obligatorio("COntraseña: ") #solo para ingresar
 
     listar_carreras()
     id_carrera = pedir_entero("Ingrese el ID de la carrera: ")
@@ -98,11 +99,11 @@ def alta_estudiante():
 
         sql = """
             INSERT INTO estudiantes 
-            (documento, nombre, apellido, correo, id_carrera)
-            VALUES (%s, %s, %s, %s, %s);
+            (documento, nombre, apellido, correo, contrasena, id_carrera)
+            VALUES (%s, %s, %s, %s,%s, %s);
         """
 
-        valores = (documento, nombre, apellido, correo, id_carrera)
+        valores = (documento, nombre, apellido, correo, contrasena, id_carrera)
 
         cursor.execute(sql, valores)
         conexion.commit()

@@ -2,6 +2,7 @@ from conexionSQL import get_connection
 from validacion_datos import pedir_texto_obligatorio, pedir_entero, pedir_entero_positivo, pedir_opcion_valida, presione_enter
 from disciplinas import listar_disciplinas
 from espacios import listar_espacios
+from docentes import listar_docentes
 
 def menu_actividades():
 

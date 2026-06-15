@@ -1,5 +1,5 @@
 from conexionSQL import get_connection
-from validacion_datos import pedir_texto_obligatorio, pedir_entero, pedir_cedula, presione_enter
+from validacion_datos import pedir_texto_obligatorio, pedir_bool, pedir_cedula, presione_enter
 
 def menu_docentes():
     while True:
@@ -41,6 +41,7 @@ def alta_docente():
     nombre = pedir_texto_obligatorio("Nombre: ")
     apellido = pedir_texto_obligatorio("Apellido: ")
     correo = pedir_texto_obligatorio("Correo electrónico: ")
+    contrasena = pedir_texto_obligatorio("Contraseña: ") #solo para ingresar
 
     conexion = None
     cursor = None
@@ -51,11 +52,11 @@ def alta_docente():
 
         sql = """
             INSERT INTO estudiantes 
-            (documento, nombre, apellido, correo)
-            VALUES (%s, %s, %s, %s);
+            (documento, nombre, apellido, correo, contrasena)
+            VALUES (%s, %s, %s, %s, %s);
         """
 
-        valores = (documento, nombre, apellido, correo)
+        valores = (documento, nombre, apellido, correo,contrasena)
 
         cursor.execute(sql, valores)
         conexion.commit()
@@ -286,16 +287,22 @@ def eliminar_docente():
             print("No existe un docente con ese documento.")
             return
 
-         Verificar si tiene dicta alguna activdad
+        #Verificar si dicta alguna activdad
+        sql_actividades = """
+            SELECT COUNT(*)
+            FROM actividadesDeportivas
+            WHERE docente_asginado = %s;
+        """
 
-        cursor.execute(sql_inscripciones, (documento,))
+
+        cursor.execute(sql_actividades, (documento,))
         cantidad_actividades = cursor.fetchone()[0]
 
         if cantidad_actividades > 0:
-            print(f"El estudiante tiene {cantidad_actividades} actividades asociada/s.")
-            respuesta = input("¿Querés borrar también sus actividades? (si/no): ").strip().lower()
+            print(f"El docente tiene {cantidad_actividades} actividades asociada/s.")
+            respuesta = pedir_bool("¿Querés borrar también sus actividades? (si/no): ").strip().lower()
 
-            if respuesta != "si":
+            if respuesta == False:
                 print("No se eliminó el docente.")
                 return
 
@@ -303,9 +310,7 @@ def eliminar_docente():
             sql_borrar_actividades = """
                 DELETE a
                 FROM actividadesDeportivas a
-                JOIN docentes D
-                    ON a.docuemnto = d.docuemnto
-                WHERE d.documento = %s;
+                WHERE a.docente_asignado = %s;
             """
 
             cursor.execute(sql_borrar_actividades, (documento,))
