@@ -85,7 +85,7 @@ def alta_estudiante():
     nombre = pedir_texto_obligatorio("Nombre: ")
     apellido = pedir_texto_obligatorio("Apellido: ")
     correo = pedir_texto_obligatorio("Correo electrónico: ")
-    contrasena = pedir_texto_obligatorio("Contraseña: ") #solo para ingresar
+    contrasena = input("Contraseña: ") #solo para ingresar
 
     listar_carreras()
     id_carrera = pedir_entero("Ingrese el ID de la carrera: ")
