@@ -76,24 +76,11 @@ WHERE i.estado = 'lista_espera'
 ORDER BY a.nombre, i.fecha_inscripcion;
 
 -- 9. Actividades con mayor porcentaje de asistencia que el promedio
-SELECT a.id_actividad, a.nombre AS actividad, ROUND(AVG(asis.presente) * 100, 2) AS porcentaje_asistencia
-FROM actividadesDeportivas a
-         JOIN inscripciones i ON a.id_actividad = i.id_actividad
-         JOIN asistencias asis ON i.id_inscripcion = asis.id_inscripcion
-WHERE i.estado = 'confirmada'
-GROUP BY a.id_actividad, a.nombre
-HAVING porcentaje_asistencia > (
-    SELECT AVG(porcentaje)
-    FROM (
-             SELECT AVG(asis2.presente) * 100 AS porcentaje
-             FROM actividadesDeportivas a2
-                      JOIN inscripciones i2 ON a2.id_actividad = i2.id_actividad
-                      JOIN asistencias asis2 ON i2.id_inscripcion = asis2.id_inscripcion
-             WHERE i2.estado = 'confirmada'
-             GROUP BY a2.id_actividad
-         ) AS porcentajes_por_actividad
-)
-ORDER BY porcentaje_asistencia DESC;
+SELECT d.documento, d.nombre, d.apellido, COUNT(a.id_actividad) AS cantidad_actividades
+FROM docentes d
+LEFT JOIN actividadesDeportivas a ON d.documento = a.docente_asignado
+GROUP BY d.documento, d.nombre, d.apellido
+ORDER BY cantidad_actividades DESC;
 
 -- 10. Actividades que existen pero no tienen estudiantes confirmados
 SELECT a.id_actividad, a.nombre AS actividad, d.nombre AS disciplina, a.fecha, a.hora_inicio, a.hora_fin, a.estado
