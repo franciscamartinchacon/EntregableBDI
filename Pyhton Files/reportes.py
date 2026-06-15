@@ -57,9 +57,9 @@ def menu_reportes():
 
             elif opcion == "2":
                 query = """
-                SELECT a.id_actividad, a.nombre, a.estado, (SELECT a.cupo_max - COUNT(*) FROM inscripciones i WHERE i.id_actividad= a.id_actividad AND i.estado = 'confirmada') as cant_cupos_disponibles  -- subconslta
+                SELECT a.id_actividad, a.nombre, a.estado, (SELECT a.cupo_max - COUNT(*) FROM inscripciones i WHERE i.id_actividad= a.id_actividad AND i.estado = 'confirmada') as cant_cupos_disponibles
                 FROM actividadesDeportivas a
-                WHERE WHERE a.estado = 'abierta' AND a.cupo_max > (SELECT COUNT(*) FROM inscripciones i WHERE i.id_actividad = a.id_actividad AND i.estado = 'confirmada')
+                WHERE a.estado = 'abierta' AND a.cupo_max > (SELECT COUNT(*) FROM inscripciones i WHERE i.id_actividad = a.id_actividad AND i.estado = 'confirmada')
                 ORDER BY cant_cupos_disponibles DESC;
                 """
 
@@ -226,7 +226,7 @@ def menu_reportes():
                         print(
                             f"Documento: {consulta[0]} | "
                             f"Nombre: {consulta[1]} | "
-                            f"Apellido: {consulta[2]}"
+                            f"Apellido: {consulta[2]} "
                             f"Cantidad de actividades: {consulta[3]}"
                         )
 
@@ -282,15 +282,15 @@ def consulta4():
 
         opcion = input("Seleccione una opción: ")
 
-        if opcion == "0":
-            break
-
         conexion = None
         cursor = None
 
         try:
             conexion = get_connection()
             cursor = conexion.cursor()
+
+            if opcion == "0":
+                break
 
             if opcion == "1":
                 query = """
@@ -314,6 +314,7 @@ def consulta4():
                             f"Cantidad de inscriptos: {consulta[0]} | "
                             f"Carrera: {consulta[1]}"
                         )
+                presione_enter()
 
             elif opcion == "2":
                 query = """
@@ -339,6 +340,8 @@ def consulta4():
                             f"Facultad: {consulta[1]}"
                         )
 
+                presione_enter()
+
             else:
                 print("Opción inválida. Intente nuevamente.")
 
@@ -351,5 +354,3 @@ def consulta4():
                 cursor.close()
             if conexion is not None:
                 conexion.close()
-
-        presione_enter()

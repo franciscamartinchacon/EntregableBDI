@@ -79,14 +79,4 @@ def pedir_cedula(mensaje):
         print("Error: el documento tiene que tener 8 dígitos.")
 
 def presione_enter():
-    while True:
-        respuesta = input("\nPresione Enter para continuar...")
-
-        if respuesta == "":
-            break
-
-        print("No escriba nada, solo presione Enter.")
-
-    print("\nVolviendo... ")
-
-#normalizar datos???
+    input("\nPresione Enter para continuar...")
