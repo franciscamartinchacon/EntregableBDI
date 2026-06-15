@@ -2,6 +2,7 @@ from conexionSQL import get_connection
 from validacion_datos import pedir_texto_obligatorio, pedir_entero, pedir_entero_positivo, pedir_opcion_valida, presione_enter
 from disciplinas import listar_disciplinas
 from espacios import listar_espacios
+from docentes import listar_docentes
 
 def menu_actividades():
 
@@ -84,6 +85,11 @@ def alta_actividad():
         "Estado (abierta/cerrada/finalizada/cancelada): ",
         estados_validos
     )
+
+    print("\nSeleccione un docente:")
+    listar_docentes()
+    docente_asignado = pedir_entero("Ingrese el docuemento del docente asignado: ")
+
 
     conexion = None
     cursor = None
