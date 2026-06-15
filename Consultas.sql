@@ -1,6 +1,7 @@
 USE entregablebd1;
 
 -- Cosnultas requeridas
+    
 -- 1. Actividades con mayor cantidad de inscriptos confirmados.
 SELECT a.id_actividad, a.nombre, COUNT(i.id_inscripcion) as cant_inscripciones
 FROM actividadesDeportivas a
@@ -44,8 +45,8 @@ GROUP BY f.nombre;
 -- 5. Porcentaje de ocupación de cada actividad
 SELECT a.id_actividad, a.nombre, a.cupo_max, COUNT(i.id_inscripcion) AS confirmados, ROUND((COUNT(i.id_inscripcion) / a.cupo_max) * 100, 2) AS porcentaje_ocupacion
 FROM actividadesDeportivas a
-         LEFT JOIN inscripciones i ON a.id_actividad = i.id_actividad
-    AND i.estado = 'confirmada'
+LEFT JOIN inscripciones i ON a.id_actividad = i.id_actividad
+AND i.estado = 'confirmada'
 GROUP BY a.id_actividad, a.nombre, a.cupo_max
 ORDER BY porcentaje_ocupacion DESC;
 
@@ -75,7 +76,7 @@ FROM inscripciones i
 WHERE i.estado = 'lista_espera'
 ORDER BY a.nombre, i.fecha_inscripcion;
 
--- 9. Actividades con mayor porcentaje de asistencia que el promedio
+-- 9. Cantidad de actividades asignadas por docente
 SELECT d.documento, d.nombre, d.apellido, COUNT(a.id_actividad) AS cantidad_actividades
 FROM docentes d
 LEFT JOIN actividadesDeportivas a ON d.documento = a.docente_asignado
@@ -85,7 +86,7 @@ ORDER BY cantidad_actividades DESC;
 -- 10. Actividades que existen pero no tienen estudiantes confirmados
 SELECT a.id_actividad, a.nombre AS actividad, d.nombre AS disciplina, a.fecha, a.hora_inicio, a.hora_fin, a.estado
 FROM actividadesDeportivas a
-         JOIN disciplinas d ON a.id_disciplina = d.id_disciplina
-         LEFT JOIN inscripciones i ON a.id_actividad = i.id_actividad AND i.estado = 'confirmada'
+JOIN disciplinas d ON a.id_disciplina = d.id_disciplina
+LEFT JOIN inscripciones i ON a.id_actividad = i.id_actividad AND i.estado = 'confirmada'
 WHERE i.id_inscripcion IS NULL
 ORDER BY a.fecha, a.hora_inicio;
