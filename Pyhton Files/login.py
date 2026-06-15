@@ -6,6 +6,7 @@ from actividades import menu_actividades, listar_actividades
 from inscripciones import gestion_inscripciones, inscribirme_a_actividad, ver_mis_inscripciones
 from asistencias import menu_asistencias
 from reportes import menu_reportes
+from disciplinas import menu_disciplinas
 
 def login():
     while True:
@@ -111,7 +112,8 @@ def menu_admins():
         print("3. Gestionar actividades deportivas")
         print("4. Gestionar inscripciones")
         print("5. Gestionar asistencias")
-        print("6. Ver reportes")
+        print("6. Gestionar disciplinas")
+        print("7. Ver reportes")
         print("0. Cerrar sesión")
 
         opcion = input("Seleccione una opción: ")
@@ -132,6 +134,9 @@ def menu_admins():
             menu_asistencias()
             presione_enter()
         elif opcion == "6":
+            menu_disciplinas()
+            presione_enter()
+        elif opcion == "7":
             menu_reportes()
             presione_enter()
         elif opcion == "0":
