@@ -168,7 +168,7 @@ def listar_inscripciones():
 
         sql = """
                     SELECT 
-                        i.id_inscripcion, i.documento, i.id_actividad, i.fecha_inscripcion, i.estado
+                        i.id_inscripcion, i.documento, e.nombre, e.apellido, i.id_actividad, a.nombre AS actividad, i.fecha_inscripcion, i.estado
                     FROM inscripciones i
                     ORDER BY  i.id_inscripcion;
                 """

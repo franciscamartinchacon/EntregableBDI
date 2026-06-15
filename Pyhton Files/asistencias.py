@@ -1,5 +1,5 @@
 from conexionSQL import get_connection
-from validacion_datos import pedir_entero, pedir_texto_obligatorio, pedir_opcion_valida,presione_enter
+from validacion_datos import pedir_entero, pedir_opcion_valida, presione_enter
 
 def menu_asistencias():
 
@@ -42,7 +42,7 @@ def listar_inscripciones_confirmadas():
             SELECT i.id_inscripcion, e.documento, e.nombre, e.apellido, a.nombre AS actividad, i.estado
             FROM inscripciones i
             JOIN estudiantes e ON i.documento = e.documento
-            JOIN actividadesDeportivas a ON i.id_actividad_deportiva = a.id_actividad
+            JOIN actividadesDeportivas a ON i.id_actividad = a.id_actividad
             WHERE i.estado = 'confirmada'
             ORDER BY a.nombre, e.apellido, e.nombre;
         """
@@ -86,7 +86,7 @@ def obtener_inscripcion_confirmada(id_inscripcion):
             SELECT i.id_inscripcion, i.estado, e.nombre, e.apellido, a.nombre AS actividad, a.fecha
             FROM inscripciones i
             JOIN estudiantes e ON i.documento = e.documento
-            JOIN actividadesDeportivas a ON i.id_actividad_deportiva = a.id_actividad
+            JOIN actividadesDeportivas a ON i.id_actividad = a.id_actividad
             WHERE i.id_inscripcion = %s;
         """
 
@@ -130,7 +130,9 @@ def registrar_asistencia():
 
     print(
         f"\nInscripción seleccionada: "
-        f"{inscripcion[2]} {inscripcion[3]} | Actividad: {inscripcion[4]}"
+        f"{inscripcion[2]} {inscripcion[3]} | "
+        f"Actividad: {inscripcion[4]} | "
+        f"Fecha: {inscripcion[5]}"
     )
 
     fecha_sql = inscripcion[5]
@@ -190,7 +192,7 @@ def listar_asistencias():
             FROM asistencias asis
             JOIN inscripciones i ON asis.id_inscripcion = i.id_inscripcion
             JOIN estudiantes e ON i.documento = e.documento
-            JOIN actividadesDeportivas a ON i.id_actividad_deportiva = a.id_actividad
+            JOIN actividadesDeportivas a ON i.id_actividad = a.id_actividad
             ORDER BY asis.fecha, a.nombre, e.apellido, e.nombre;
         """
 
