@@ -13,7 +13,7 @@ def menu_reportes():
         print("6. Porcentaje de asistencia por actividad.")
         print("7. Estudiantes con tres o más inasistencias registradas.")
         print("8. Estudiantes en lista de espera por actividad.")
-        print("9. Actividades con mayor porcentaje de asistencia que el promedio.")
+        print("9. Cantidad de actividades asignadas por docente")
         print("10. Actividades que existen pero no tienen estudiantes confirmados.")
         print("0. Volver al menú principal")
 
@@ -46,7 +46,7 @@ def menu_reportes():
                 if len(consultas) == 0:
                     print("No hay estudiantes inscriptos en actividades.")
                 else:
-                    print("Actividades con mayor cantidad de inscriptos confirmados.")
+                    print("Actividades con mayor cantidad de inscriptos confirmados:")
                     for consulta in consultas:
                         print(
                             f"ID Actividad: {consulta[0]} | "
@@ -59,7 +59,7 @@ def menu_reportes():
                 query = """
                 SELECT a.id_actividad, a.nombre, a.estado, (SELECT a.cupo_max - COUNT(*) FROM inscripciones i WHERE i.id_actividad= a.id_actividad AND i.estado = 'confirmada') as cant_cupos_disponibles  -- subconslta
                 FROM actividadesDeportivas a
-                WHERE a.cupo_max > (SELECT COUNT(*) FROM inscripciones i WHERE i.id_actividad = a.id_actividad AND i.estado = 'confirmada')
+                WHERE WHERE a.estado = 'abierta' AND a.cupo_max > (SELECT COUNT(*) FROM inscripciones i WHERE i.id_actividad = a.id_actividad AND i.estado = 'confirmada')
                 ORDER BY cant_cupos_disponibles DESC;
                 """
 
@@ -69,7 +69,7 @@ def menu_reportes():
                 if len(consultas) == 0:
                     print("No hay actividades con cupos disponibles.")
                 else:
-                    print("Actividades con cupos disponibles.")
+                    print("Actividades con cupos disponibles:")
                     for consulta in consultas:
                         print(
                             f"ID Activdad: {consulta[0]} | "
@@ -94,7 +94,7 @@ def menu_reportes():
                 if len(consultas) == 0:
                     print("No hay estudiantes inscriptos.")
                 else:
-                    print("Cantidad de inscriptos por disciplina deportiva.")
+                    print("Cantidad de inscriptos por disciplina deportiva:")
                     for consulta in consultas:
                         print(
                             f"Cantidad de inscriptos: {consulta[0]} | "
@@ -108,8 +108,8 @@ def menu_reportes():
                 query = """
                 SELECT a.id_actividad, a.nombre, a.cupo_max, COUNT(i.id_inscripcion) AS confirmados, ROUND((COUNT(i.id_inscripcion) / a.cupo_max) * 100, 2) AS porcentaje_ocupacion
                 FROM actividadesDeportivas a
-                         LEFT JOIN inscripciones i ON a.id_actividad = i.id_actividad
-                    AND i.estado = 'confirmada'
+                LEFT JOIN inscripciones i ON a.id_actividad = i.id_actividad
+                AND i.estado = 'confirmada'
                 GROUP BY a.id_actividad, a.nombre, a.cupo_max
                 ORDER BY porcentaje_ocupacion DESC;
                 """
@@ -120,7 +120,7 @@ def menu_reportes():
                 if len(consultas) == 0:
                     print("No hay registros para realizar el cálculo.")
                 else:
-                    print("Porcentaje de ocupación de cada actividad.")
+                    print("Porcentaje de ocupación de cada actividad:")
 
                     for consulta in consultas:
                         print(
@@ -135,7 +135,7 @@ def menu_reportes():
                 query = """
                 SELECT a.nombre, ROUND(AVG(asis.presente) * 100, 2) AS porcentaje
                 FROM actividadesDeportivas a
-                LEFT JOIN inscripciones i ON i.id_actividad = a.id_actividad -- para incluir de cero tambien
+                LEFT JOIN inscripciones i ON i.id_actividad = a.id_actividad -- para inculir de cero tambien
                 LEFT JOIN asistencias asis ON i.id_inscripcion = asis.id_inscripcion AND i.estado = 'confirmada'
                 GROUP BY a.nombre
                 ORDER BY porcentaje DESC;
@@ -146,7 +146,7 @@ def menu_reportes():
                 if len(consultas) == 0:
                     print("No hay registros para realizar el cálculo.")
                 else:
-                    print("Porcentaje de asistencia por actividad.")
+                    print("Porcentaje de asistencia por actividad:")
                     for consulta in consultas:
                         print(
                             f"Nombre: {consulta[0]} | "
@@ -172,7 +172,7 @@ def menu_reportes():
                 if len(consultas) == 0:
                     print("No hay inscripciones para realizar el cálculo.")
                 else:
-                    print("Estudiantes con tres o más inasistencias registradas.")
+                    print("Estudiantes con tres o más inasistencias registradas:")
                     for consulta in consultas:
                         print(
                             f"Documento {consulta[0]} | "
@@ -196,7 +196,7 @@ def menu_reportes():
                 if len(consultas) == 0:
                     print("No hay estudiantes registrados.")
                 else:
-                    print("Estudiantes en lista de espera por actividad..")
+                    print("Estudiantes en lista de espera por actividad:")
                     for consulta in consultas:
                         print(
                             f"Actividad: {consulta[0]} | "
@@ -208,38 +208,26 @@ def menu_reportes():
 
             elif opcion == "9":
                 query = """
-                SELECT a.id_actividad, a.nombre AS actividad, ROUND(AVG(asis.presente) * 100, 2) AS porcentaje_asistencia
-                FROM actividadesDeportivas a
-                         JOIN inscripciones i ON a.id_actividad = i.id_actividad
-                         JOIN asistencias asis ON i.id_inscripcion = asis.id_inscripcion
-                WHERE i.estado = 'confirmada'
-                GROUP BY a.id_actividad, a.nombre
-                HAVING porcentaje_asistencia > (
-                    SELECT AVG(porcentaje)
-                    FROM (
-                             SELECT AVG(asis2.presente) * 100 AS porcentaje
-                             FROM actividadesDeportivas a2
-                                      JOIN inscripciones i2 ON a2.id_actividad = i2.id_actividad
-                                      JOIN asistencias asis2 ON i2.id_inscripcion = asis2.id_inscripcion
-                             WHERE i2.estado = 'confirmada'
-                             GROUP BY a2.id_actividad
-                         ) AS porcentajes_por_actividad
-                )
-                ORDER BY porcentaje_asistencia DESC;
+                SELECT d.documento, d.nombre, d.apellido, COUNT(a.id_actividad) AS cantidad_actividades
+                FROM docentes d
+                LEFT JOIN actividadesDeportivas a ON d.documento = a.docente_asignado
+                GROUP BY d.documento, d.nombre, d.apellido
+                ORDER BY cantidad_actividades DESC;
                 """
 
                 cursor.execute(query)
                 consultas = cursor.fetchall()
 
                 if len(consultas) == 0:
-                    print("No hay estudiantes registrados.")
+                    print("No hay docentes registrados.")
                 else:
-                    print("Actividades con mayor porcentaje de asistencia que el promedio.")
+                    print("Cantidad de actividades asignadas por docente:")
                     for consulta in consultas:
                         print(
-                            f"ID Actividad: {consulta[0]} | "
-                            f"Actividad: {consulta[1]} | "
-                            f"Porcentaje Asistencia: {consulta[2]}"
+                            f"Documento: {consulta[0]} | "
+                            f"Nombre: {consulta[1]} | "
+                            f"Apellido: {consulta[2]}"
+                            f"Cantidad de actividades: {consulta[3]}"
                         )
 
 
@@ -247,8 +235,8 @@ def menu_reportes():
                 query = """
                 SELECT a.id_actividad, a.nombre AS actividad, d.nombre AS disciplina, a.fecha, a.hora_inicio, a.hora_fin, a.estado
                 FROM actividadesDeportivas a
-                         JOIN disciplinas d ON a.id_disciplina = d.id_disciplina
-                         LEFT JOIN inscripciones i ON a.id_actividad = i.id_actividad AND i.estado = 'confirmada'
+                JOIN disciplinas d ON a.id_disciplina = d.id_disciplina
+                LEFT JOIN inscripciones i ON a.id_actividad = i.id_actividad AND i.estado = 'confirmada'
                 WHERE i.id_inscripcion IS NULL
                 ORDER BY a.fecha, a.hora_inicio;
                 """
@@ -258,7 +246,7 @@ def menu_reportes():
                 if len(consultas) == 0:
                     print("No hay estudiantes registrados.")
                 else:
-                    print("Actividades que existen pero no tienen estudiantes confirmados")
+                    print("Actividades que existen pero no tienen estudiantes confirmados:")
                     for consulta in consultas:
                         print(
                             f"ID Actividad: {consulta[0]} | "
@@ -320,7 +308,7 @@ def consulta4():
                 if len(consultas) == 0:
                     print("No hay estudiantes registrados.")
                 else:
-                    print("Cantidad de inscriptos por carrera.")
+                    print("Cantidad de inscriptos por carrera:")
                     for consulta in consultas:
                         print(
                             f"Cantidad de inscriptos: {consulta[0]} | "
@@ -344,7 +332,7 @@ def consulta4():
                 if len(consultas) == 0:
                     print("No hay estudiantes registrados.")
                 else:
-                    print("Cantidad de inscriptos por facultad.")
+                    print("Cantidad de inscriptos por facultad:")
                     for consulta in consultas:
                         print(
                             f"Cantidad de inscriptos: {consulta[0]} | "

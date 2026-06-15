@@ -1,6 +1,7 @@
 USE entregablebd1;
 
 -- Cosnultas requeridas
+    
 -- 1. Actividades con mayor cantidad de inscriptos confirmados.
 SELECT a.id_actividad, a.nombre, COUNT(i.id_inscripcion) as cant_inscripciones
 FROM actividadesDeportivas a
@@ -13,8 +14,8 @@ Limit 3; -- para que no devuelva una sola, sino el top 3
 -- 2. Actividades con cupos disponibles.
 SELECT a.id_actividad, a.nombre, a.estado, (SELECT a.cupo_max - COUNT(*) FROM inscripciones i WHERE i.id_actividad= a.id_actividad AND i.estado = 'confirmada') as cant_cupos_disponibles  -- subconslta
 FROM actividadesDeportivas a
-WHERE a.cupo_max > (SELECT COUNT(*) FROM inscripciones i WHERE i.id_actividad = a.id_actividad AND i.estado = 'confirmada')
-ORDER BY cant_cupos_disponibles DESC; #deberia filtar solo actividades abiertas??
+WHERE a.estado = 'abierta' AND a.cupo_max > (SELECT COUNT(*) FROM inscripciones i WHERE i.id_actividad = a.id_actividad AND i.estado = 'confirmada')
+ORDER BY cant_cupos_disponibles DESC;
 
 -- 3. Cantidad de inscriptos por disciplina deportiva.
 SELECT COUNT(I.id_inscripcion) as cant_inscriptos, d.nombre
@@ -44,8 +45,8 @@ GROUP BY f.nombre;
 -- 5. Porcentaje de ocupación de cada actividad
 SELECT a.id_actividad, a.nombre, a.cupo_max, COUNT(i.id_inscripcion) AS confirmados, ROUND((COUNT(i.id_inscripcion) / a.cupo_max) * 100, 2) AS porcentaje_ocupacion
 FROM actividadesDeportivas a
-         LEFT JOIN inscripciones i ON a.id_actividad = i.id_actividad
-    AND i.estado = 'confirmada'
+LEFT JOIN inscripciones i ON a.id_actividad = i.id_actividad
+AND i.estado = 'confirmada'
 GROUP BY a.id_actividad, a.nombre, a.cupo_max
 ORDER BY porcentaje_ocupacion DESC;
 
@@ -68,7 +69,6 @@ HAVING cantidad_inasistencias >= 3
 ORDER BY cantidad_inasistencias DESC;
 
 -- 8. Estudiantes en lista de espera por actividad
--- VER ORDER BY (ACTIVIDAD?) Y DSP CAMBIAR EN PYTHON
 SELECT a.nombre AS actividad, e.nombre, e.apellido, e.documento, i.fecha_inscripcion
 FROM inscripciones i
  JOIN estudiantes e ON i.documento = e.documento
@@ -86,7 +86,7 @@ ORDER BY cantidad_actividades DESC;
 -- 10. Actividades que existen pero no tienen estudiantes confirmados
 SELECT a.id_actividad, a.nombre AS actividad, d.nombre AS disciplina, a.fecha, a.hora_inicio, a.hora_fin, a.estado
 FROM actividadesDeportivas a
-         JOIN disciplinas d ON a.id_disciplina = d.id_disciplina
-         LEFT JOIN inscripciones i ON a.id_actividad = i.id_actividad AND i.estado = 'confirmada'
+JOIN disciplinas d ON a.id_disciplina = d.id_disciplina
+LEFT JOIN inscripciones i ON a.id_actividad = i.id_actividad AND i.estado = 'confirmada'
 WHERE i.id_inscripcion IS NULL
 ORDER BY a.fecha, a.hora_inicio;
