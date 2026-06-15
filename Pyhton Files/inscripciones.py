@@ -1,8 +1,8 @@
 
 from conexionSQL import get_connection
-from validacion_datos import pedir_entero, pedir_cedula
+from validacion_datos import pedir_entero, pedir_cedula, presione_enter
 from estudiantes import listar_estudiantes
-from actividades import listar_actividades, presione_enter
+from actividades import listar_actividades
 
 def gestion_inscripciones():
     while True:
@@ -192,6 +192,134 @@ def listar_inscripciones():
 
     except Exception as e:
         print("Error al listar inscripciones:")
+        print(e)
+
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if conexion is not None:
+            conexion.close()
+
+def inscribirme_a_actividad(documento):
+    print("\n--- Inscribirme a una actividad ---")
+
+    listar_actividades()
+    id_actividad = pedir_entero("Ingrese el ID de la actividad deportiva: ")
+
+    conexion = None
+    cursor = None
+
+    try:
+        conexion = get_connection()
+        cursor = conexion.cursor()
+
+        # La actividad tiene que existir y estar abiierta. Cupos ocupados
+        sql_verificar = """
+            SELECT 
+                estado, 
+                cupo_max,
+                (
+                    SELECT COUNT(*) 
+                    FROM inscripciones 
+                    WHERE id_actividad = %s 
+                      AND estado = 'confirmada'
+                ) AS inscriptos
+            FROM actividadesDeportivas
+            WHERE id_actividad = %s;
+        """
+
+        cursor.execute(sql_verificar, (id_actividad, id_actividad))
+        actividad = cursor.fetchone()
+
+        if actividad is None:
+            print("La actividad no existe.")
+            return
+
+        if actividad[0] != "abierta":
+            print("La actividad no está abierta, por ende no se puede realizar la inscripción.")
+            return
+
+        # actividad[1] = cupo_max
+        # actividad[2] = inscriptos confirmados
+        if actividad[2] < actividad[1]:
+            estado = "confirmada"
+        else:
+            estado = "lista_espera"
+
+        # Solo se controla conflicto horario si la inscripción queda confirmada
+        if estado == "confirmada" and tiene_conflicto_horario(documento, id_actividad):
+            print("Ya tenés una actividad confirmada en ese horario.")
+            return
+
+        sql_insertar = """
+            INSERT INTO inscripciones
+            (documento, id_actividad, estado)
+            VALUES (%s, %s, %s);
+        """
+
+        cursor.execute(sql_insertar, (documento, id_actividad, estado))
+        conexion.commit()
+
+        if estado == "confirmada":
+            print("Inscripción creada correctamente. Estado: confirmada.")
+        else:
+            print("La actividad no tiene cupos disponibles. Quedaste en lista de espera.")
+
+    except Exception as e:
+        print("Error al crear inscripción:")
+        print(e)
+        print("Puede ser que ya estés inscripto a esa actividad.")
+
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if conexion is not None:
+            conexion.close()
+
+def ver_mis_inscripciones(documento):
+    print("\n--- Mis inscripciones ---")
+
+    conexion = None
+    cursor = None
+
+    try:
+        conexion = get_connection()
+        cursor = conexion.cursor()
+
+        sql = """
+            SELECT 
+                i.id_inscripcion,
+                a.nombre,
+                a.fecha,
+                a.hora_inicio,
+                a.hora_fin,
+                i.fecha_inscripcion,
+                i.estado
+            FROM inscripciones i
+            JOIN actividadesDeportivas a 
+                ON i.id_actividad = a.id_actividad
+            WHERE i.documento = %s
+            ORDER BY a.fecha, a.hora_inicio;
+        """
+
+        cursor.execute(sql, (documento,))
+        inscripciones = cursor.fetchall()
+
+        if len(inscripciones) == 0:
+            print("No tenés inscripciones registradas.")
+        else:
+            for inscripcion in inscripciones:
+                print(
+                    f"ID inscripción: {inscripcion[0]} | "
+                    f"Actividad: {inscripcion[1]} | "
+                    f"Fecha actividad: {inscripcion[2]} | "
+                    f"Horario: {inscripcion[3]} a {inscripcion[4]} | "
+                    f"Fecha inscripción: {inscripcion[5]} | "
+                    f"Estado: {inscripcion[6]}"
+                )
+
+    except Exception as e:
+        print("Error al listar tus inscripciones:")
         print(e)
 
     finally:
