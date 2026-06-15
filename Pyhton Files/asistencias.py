@@ -4,10 +4,10 @@ from validacion_datos import pedir_entero, pedir_opcion_valida, presione_enter
 def menu_asistencias():
 
     while True:
-        print("\n--- Registro de Asistencias ---")
+        print("\n--- Gestión de Asistencias ---")
         print("1. Registrar asistencia")
         print("2. Listar asistencias")
-        print("3. Listar inscripciones confirmadas")
+        print("3. Ver inscripciones confirmadas")
         print("0. Volver al menú principal")
 
         opcion = input("Seleccione una opción: ")

@@ -118,22 +118,16 @@ def menu_admins():
 
         if opcion == "1":
             menu_estudiantes()
-            presione_enter()
         elif opcion == "2":
             menu_docentes()
-            presione_enter()
         elif opcion == "3":
             menu_actividades()
-            presione_enter()
         elif opcion == "4":
             gestion_inscripciones()
-            presione_enter()
         elif opcion == "5":
             menu_asistencias()
-            presione_enter()
         elif opcion == "6":
             menu_reportes()
-            presione_enter()
         elif opcion == "0":
             print("Cerrando sesión...")
             break
@@ -155,10 +149,8 @@ def menu_para_docentes():
             presione_enter()
         elif opcion == "2":
             menu_asistencias()
-            presione_enter()
         elif opcion == "3":
             menu_reportes()
-            presione_enter()
         elif opcion == "0":
             print("Cerrando sesión...")
             break
