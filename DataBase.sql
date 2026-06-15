@@ -20,12 +20,14 @@ CREATE TABLE carreras
     FOREIGN KEY (id_facultad) REFERENCES facultades(id_facultad),
     UNIQUE (nombre, id_facultad)
 );
-CREATE TABLE usuarios
+
+CREATE TABLE admins
 (
-    documento INT NOT NULL UNIQUE,
-    nombre_usuario VARCHAR(50) NOT NULL UNIQUE,
-    contrasena VARCHAR(255) NOT NULL,
-    rol ENUM('admin','docente','estudiante') NOT NULL,
+    documento INT NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
+    apellido VARCHAR(100) NOT NULL,
+    correo VARCHAR(100) NOT NULL UNIQUE,
+    contrasena VARCHAR(100) NOT NULL,
 
     PRIMARY KEY (documento)
 );
@@ -35,22 +37,22 @@ CREATE TABLE docentes
     documento INT NOT NULL UNIQUE,
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100) NOT NULL,
-    email VARCHAR(100),
+    correo VARCHAR(100) NOT NULL,
+    contrasena VARCHAR(100) NOT NULL,
 
-    PRIMARY KEY (documento),
-    FOREIGN KEY (documento) REFERENCES usuarios(documento)
+    PRIMARY KEY (documento)
 );
 
 CREATE TABLE estudiantes
 (
     documento   INT NOT NULL UNIQUE, #unico por cada estudiante
-    nombre      VARCHAR(50) NOT NULL,
-    apellido    VARCHAR(50) NOT NULL,
-    correo      VARCHAR(50) NOT NULL UNIQUE, #unico por cada estudiante
+    nombre      VARCHAR(100) NOT NULL,
+    apellido    VARCHAR(100) NOT NULL,
+    correo      VARCHAR(100) NOT NULL UNIQUE, #unico por cada estudiante
+    contrasena  VARCHAR(100) NOT NULL,
     id_carrera    INT NOT NULL,
 
     PRIMARY KEY (documento),
-    FOREIGN KEY (documento) REFERENCES usuarios(documento),
     FOREIGN KEY (id_carrera) REFERENCES carreras(id_carrera)
 );
 
@@ -84,10 +86,12 @@ CREATE TABLE actividadesDeportivas
     hora_inicio     TIME NOT NULL,
     hora_fin        TIME NOT NULL,
     estado          ENUM('abierta', 'cerrada', 'finalizada', 'cancelada') NOT NULL,
+    docente_asignado INT NOT NULL,
 
     PRIMARY KEY (id_actividad),
     FOREIGN KEY (id_disciplina) REFERENCES disciplinas(id_disciplina),
     FOREIGN KEY (id_espacio) REFERENCES espaciosDeportivos(id_espacio),
+    FOREIGN KEY (docente_asignado) REFERENCES docentes(documento),
 
     CHECK (cupo_max > 0),
     CHECK (hora_fin > hora_inicio)

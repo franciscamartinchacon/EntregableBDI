@@ -83,7 +83,7 @@ def obtener_inscripcion_confirmada(id_inscripcion):
         cursor = conexion.cursor()
 
         sql = """
-            SELECT i.id_inscripcion, i.estado, e.nombre, e.apellido, a.nombre AS actividad
+            SELECT i.id_inscripcion, i.estado, e.nombre, e.apellido, a.nombre AS actividad, a.fecha
             FROM inscripciones i
             JOIN estudiantes e ON i.documento = e.documento
             JOIN actividadesDeportivas a ON i.id_actividad_deportiva = a.id_actividad
@@ -133,7 +133,7 @@ def registrar_asistencia():
         f"{inscripcion[2]} {inscripcion[3]} | Actividad: {inscripcion[4]}"
     )
 
-    fecha_sql = pedir_texto_obligatorio("Fecha de asistencia (AAAA-MM-DD): ")
+    fecha_sql = inscripcion[5]
 
     opciones_validas = ["si", "no"]
     respuesta = pedir_opcion_valida("¿Estuvo presente? (si/no): ", opciones_validas)
@@ -166,8 +166,7 @@ def registrar_asistencia():
     except Exception as e:
         print("Error al registrar asistencia.")
         print(e)
-        print("Revise que la fecha tenga formato AAAA-MM-DD.")
-        print("También puede ser que ya exista una asistencia registrada para esa inscripción en esa fecha.")
+        print("Puede ser que ya exista una asistencia registrada para esa inscripción.")
 
     finally:
         if cursor is not None:
