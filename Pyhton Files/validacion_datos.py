@@ -2,8 +2,17 @@
 
 def pedir_texto_obligatorio(mensaje):
     # Pide un texto por consola y valida que no esté vacío.
+    num = "0123456789"
     while True:
         valor = input(mensaje).strip()
+        contiene_num = False
+        for letra in valor:
+            if letra in num:
+                contiene_num = True
+                break
+        if contiene_num == True:
+            print("Error: El texto solicitado no puede contner números")
+            continue
 
         if valor != "":
             return valor
