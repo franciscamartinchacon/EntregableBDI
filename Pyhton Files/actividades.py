@@ -36,43 +36,6 @@ def menu_actividades():
             print("Opción inválida. Intente nuevamente.")
 
 
-def listar_docentes():
-    print("\n--- Docentes disponibles ---")
-
-    conexion = None
-    cursor = None
-
-    try:
-        conexion = get_connection()
-        cursor = conexion.cursor()
-
-        sql = """
-            SELECT documento, nombre, apellido
-            FROM docentes
-            ORDER BY apellido, nombre;
-        """
-
-        cursor.execute(sql)
-        docentes = cursor.fetchall()
-
-        if len(docentes) == 0:
-            print("No hay docentes registrados.")
-        else:
-            for docente in docentes:
-                print(
-                    f"Documento: {docente[0]} | "
-                    f"Docente: {docente[1]} {docente[2]}"
-                )
-
-    except Exception as e:
-        print("Error al listar docentes:")
-        print(e)
-
-    finally:
-        if cursor is not None:
-            cursor.close()
-        if conexion is not None:
-            conexion.close()
 
 def alta_actividad():
 
@@ -105,9 +68,9 @@ def alta_actividad():
         dias_validos
     )
 
-    fecha = pedir_texto_obligatorio("Fecha (AAAA-MM-DD): ")
-    hora_inicio = pedir_texto_obligatorio("Hora de inicio (HH:MM:SS): ")
-    hora_fin = pedir_texto_obligatorio("Hora de fin (HH:MM:SS): ")
+    fecha = input("Fecha (AAAA-MM-DD): ")
+    hora_inicio = input("Hora de inicio (HH:MM:SS): ")
+    hora_fin = input("Hora de fin (HH:MM:SS): ")
 
     estados_validos = [
         "abierta",
@@ -480,7 +443,7 @@ def modificar_dia_actividad(id_actividad):
 
 def modificar_fecha_actividad(id_actividad):
 
-        fecha = pedir_texto_obligatorio("Nueva fecha (AAAA-MM-DD): ")
+        fecha = input("Nueva fecha (AAAA-MM-DD): ")
 
         conexion = None
         cursor = None
@@ -517,8 +480,8 @@ def modificar_fecha_actividad(id_actividad):
 def modificar_horario_actividad(id_actividad):
     #Modifica la hora de inicio y la hora de fin de una actividad deportiva.
 
-    hora_inicio = pedir_texto_obligatorio("Nueva hora de inicio (HH:MM:SS): ")
-    hora_fin = pedir_texto_obligatorio("Nueva hora de fin (HH:MM:SS): ")
+    hora_inicio = input("Nueva hora de inicio (HH:MM:SS): ")
+    hora_fin = input("Nueva hora de fin (HH:MM:SS): ")
 
     conexion = None
     cursor = None
