@@ -191,3 +191,5 @@ def menu_para_estudiante(documento):
             break
         else:
             print("Opción inválida.")
+
+login()
