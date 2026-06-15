@@ -57,7 +57,7 @@ def pedir_opcion_valida(mensaje, opciones_validas):
 def pedir_bool(mensaje):
     # Pide si/no por consola y luego lo convierte a True o False
     while True:
-        valor = input(mensaje).strip().lower() #saa espacios en blanco y en minuscula
+        valor = input(mensaje).strip().lower() #si hay espacios en blanco (antes y/o dsp) y en minuscula
 
         if valor == "":
             print("Error. Este campo no puede estar vacío.")

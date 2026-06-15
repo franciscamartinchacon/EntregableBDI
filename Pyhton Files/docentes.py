@@ -41,7 +41,7 @@ def alta_docente():
     nombre = pedir_texto_obligatorio("Nombre: ")
     apellido = pedir_texto_obligatorio("Apellido: ")
     correo = pedir_texto_obligatorio("Correo electrónico: ")
-    contrasena = pedir_texto_obligatorio("Contraseña: ") #solo para ingresar
+    contrasena = input("Contraseña: ") #solo para ingresar
 
     conexion = None
     cursor = None
