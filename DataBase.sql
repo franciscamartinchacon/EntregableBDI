@@ -22,12 +22,12 @@ CREATE TABLE carreras
 );
 CREATE TABLE usuarios
 (
-    docuemento INT NOT NULL UNIQUE,
+    documento INT NOT NULL UNIQUE,
     nombre_usuario VARCHAR(50) NOT NULL UNIQUE,
     contrasena VARCHAR(255) NOT NULL,
     rol ENUM('admin','docente','estudiante') NOT NULL,
 
-    PRIMARY KEY (docuemento)
+    PRIMARY KEY (documento)
 );
 
 CREATE TABLE docentes
@@ -38,7 +38,7 @@ CREATE TABLE docentes
     email VARCHAR(100),
 
     PRIMARY KEY (documento),
-    FOREIGN KEY (documento) REFERENCES usuarios(docuemento)
+    FOREIGN KEY (documento) REFERENCES usuarios(documento)
 );
 
 CREATE TABLE estudiantes
@@ -50,7 +50,7 @@ CREATE TABLE estudiantes
     id_carrera    INT NOT NULL,
 
     PRIMARY KEY (documento),
-    FOREIGN KEY (documento) REFERENCES usuarios(docuemento),
+    FOREIGN KEY (documento) REFERENCES usuarios(documento),
     FOREIGN KEY (id_carrera) REFERENCES carreras(id_carrera)
 );
 

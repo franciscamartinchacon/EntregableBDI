@@ -1,22 +1,27 @@
 from conexionSQL import get_connection
-
+from validacion_datos import pedir_entero, pedir_texto_obligatorio
 def login():
 
-    usuario = input("Uusuario: ")
-    contrasena = input("Contraseña: ")
+    documento = pedir_texto_obligatorio("Documento: ")
+    contrasena = pedir_entero("Contraseña: ")
 
     conexion = get_connection()
     cursor = conexion.cursor()
 
     #Consulta en SQL para determinar el rol del usuario.
-    sql = """
-            SELECT documento, rol
-            FROM usuarios
-            WHERE nombre_usuario = %s
-            AND contrasena = %s
-        """
+    #Busca el docuemnto y la contra en todas las tablas
+    busca_usuario = True
 
-    cursor.execute(sql, (usuario, contrasena))
+    while busca_usuario == True:
+        sql = """
+                SELECT documento, nombre, apellido
+                FROM estudiantes
+                WHERE documento = %s
+                AND contrasena = %s
+            """
+
+        cursor.execute(sql, (documento, contrasena))
+        if documento ==
 
     resultado = cursor.fetchone()
 
